@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(
             function () {
+                \Log::info('----test log');
                 if (config('owner-notifications.ownerNotificationChannel') !== '' && config('owner-notifications.cron') !== '') {
                     $Timestamp = Carbon\Carbon::now()->subDays(config('owner-notifications.staleDocumentThresholdDays'))->toDateTimeString();
                     \BookStack\Entities\Models\Page::whereDosentHave('revisions', function ($query) use($Timestamp){
