@@ -9,6 +9,7 @@
     "type": "project",
     "require": {
         "php": "^7.4|^8.0",
+        "aws/aws-sdk-php": "^3.135",
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-fileinfo": "*",

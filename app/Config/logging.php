@@ -4,6 +4,7 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
+use Carbon\Carbon;
 
 /**
  * Logging configuration options.
@@ -96,6 +97,25 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        'cloudwatch' => [
+            'driver' => 'custom',
+            'via' => \App\Logging\CloudWatchLoggerFactory::class,
+            'sdk' => [
+              'region' => env('AWS_REGION', ''),
+              'version' => 'latest',
+              'credentials' => [
+                'key' => env('AWS_KEY'),
+                'secret' => env('AWS_SECRET'),
+              ]
+            ],
+            'include_stack_traces' => env('INCLUDE_STACK_TRACES', 'false'),
+            'retention' => 14,
+            'level' => 'info',
+            'group' => '/api/'.env('DB_DATABASE'),
+            'stream' => Carbon::now()->format('Ymd'),
+            'batch_size' => 1
+        ]
     ],
 
     // Failed Login Message
