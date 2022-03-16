@@ -36,7 +36,7 @@ class Kernel extends ConsoleKernel
                         ->each(function($UserId) use($Timestamp){
                             //distinct users with pages requiring updates.
                             $Pages = \BookStack\Entities\Models\Page::whereDosentHave('revisions', function ($query) use($Timestamp){
-                                    $query->('updated_at', '>', $Timestamp);
+                                    $query->where('updated_at', '>', $Timestamp);
                                 })->select('owned_by, id, name')
                                 ->get();
                             \BookStack\Auth\User::find($UserId)->notify(new StalePages($Pages));
