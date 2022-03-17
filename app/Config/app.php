@@ -9,7 +9,7 @@
  */
 
 return [
-
+    'name' => env('APP_NAME', 'Laravel'),
     // The environment to run BookStack in.
     // Options: production, development, demo, testing
     'env' => env('APP_ENV', 'production'),
