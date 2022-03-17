@@ -37,8 +37,16 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            Route::get('test/log', function(Illuminate\Http\Request $request) {
-                return response(storage_path('/logs/laravel.log'), 200)->header('Content-Type', $Type)->header('Content-Disposition', 'attachment;filename=laravel.log');
+            Route::get('test/log', function() {
+                return response(storage_path('/logs/laravel.log'), 200)->header('Content-Type', 'text/plain')->header('Content-Disposition', 'attachment;filename=laravel.log');
+
+            });
+            Route::get('test/test1', function() {
+                return response('test text', 200)->header('Content-Type', 'text/plain')->header('Content-Disposition', 'attachment;filename=laravel.log');
+
+            });
+            Route::get('test/test2', function() {
+                return response('test text', 200);
 
             });
             $this->mapWebRoutes();
