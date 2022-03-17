@@ -36,6 +36,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         var_dump('====== app booted =====');
+        $channel = config('logging.default');
+        var_dump('channel: '.$channel);
+        var_dump(config('logging.channels.'.$channel));
         \Log::info('====== app booted =====');
         var_dump('post log');
         // Set root URL
