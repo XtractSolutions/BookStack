@@ -35,7 +35,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        var_dump('====== app booted =====');
         \Log::info('====== app booted =====');
+        var_dump('post log');
         // Set root URL
         $appUrl = config('app.url');
         if ($appUrl) {
