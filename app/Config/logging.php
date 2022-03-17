@@ -100,7 +100,7 @@ return [
 
         'cloudwatch' => [
             'driver' => 'custom',
-            'via' => \App\Logging\CloudWatchLoggerFactory::class,
+            'via' => \BookStack\Logging\CloudWatchLoggerFactory::class,
             'sdk' => [
               'region' => env('AWS_REGION', ''),
               'version' => 'latest',
