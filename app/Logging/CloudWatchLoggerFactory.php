@@ -18,8 +18,6 @@ class CloudWatchLoggerFactory
      */
     public function __invoke(array $config)
     {
-        var_dump('---in logger---');
-        var_dump($config);
         $sdkParams = $config["sdk"];
         $tags = $config["tags"] ?? [ ];
         $name = $config["name"] ?? 'cloudwatch';
@@ -52,7 +50,7 @@ class CloudWatchLoggerFactory
         $logger = new Logger($name);
         // Set handler
         $logger->pushHandler($handler);
-        var_dump('logger returned');
+
         return $logger;
     }
 }
