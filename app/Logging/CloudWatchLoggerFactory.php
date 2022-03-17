@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Logging;
+namespace BookStack\Logging;
 
 use Aws\CloudWatchLogs\CloudWatchLogsClient;
 use Maxbanton\Cwh\Handler\CloudWatch;
