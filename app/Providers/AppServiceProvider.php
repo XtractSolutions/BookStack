@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         $channel = config('logging.default');
-        \Log::info('====== app booted =====');
+
         // Set root URL
         $appUrl = config('app.url');
         if ($appUrl) {
