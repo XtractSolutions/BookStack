@@ -43,7 +43,7 @@ class StalePages extends Notification
     {
         return (new MailMessage)
             ->subject("You have stale :appName pages", ['appName' => setting('app-name')])
-            ->line('The following pages have not had a revision in more than :days', ['days' => config('owner-notifications.staleDocumentThresholdDays')])
+            ->line('The following pages have not had a revision in more than :days', ['days' => config('ownerNotifications.staleDocumentThresholdDays')])
             ->addPageList($this->Pages)
             ->action(trans('auth.reset_password'), url('password/reset/' . $this->token))
             ->line('Please update these pages as soon as possible.');

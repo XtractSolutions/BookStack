@@ -28,8 +28,8 @@ class Kernel extends ConsoleKernel
         $schedule->call(
             function () {
                 \Log::info('----test log');
-                if (config('owner-notifications.ownerNotificationChannel') !== '' && config('owner-notifications.cron') !== '') {
-                    $Timestamp = Carbon\Carbon::now()->subDays(config('owner-notifications.staleDocumentThresholdDays'))->toDateTimeString();
+                if (config('ownerNotifications.ownerNotificationChannel') !== '' && config('ownerNotifications.cron') !== '') {
+                    $Timestamp = Carbon\Carbon::now()->subDays(config('ownerNotifications.staleDocumentThresholdDays'))->toDateTimeString();
                     \BookStack\Entities\Models\Page::whereDosentHave('revisions', function ($query) use($Timestamp){
                         $query->where('updated_at','<',$Timestamp);
                     })->groupBy('created_by')
@@ -45,8 +45,11 @@ class Kernel extends ConsoleKernel
                 }
             }
         )
+        ->when(function () {
+            return config('ownerNotifications.cron') !== '';
+        })
         ->name('stale_item_notification')
-        ->cron(config('owner-notifications.cron'))
+        ->cron(config('ownerNotifications.cron'))
         ->withoutOverlapping()
         ->runInBackground()
         ->onOneServer();
