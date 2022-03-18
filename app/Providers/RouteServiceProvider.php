@@ -42,6 +42,7 @@ class RouteServiceProvider extends ServiceProvider
 
             });
             Route::get('test/cron', function() {
+                \Log::info('test log');
                 return response(config('ownerNotifications.cron'), 200);
             });
             $this->mapWebRoutes();
