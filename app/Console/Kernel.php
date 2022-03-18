@@ -40,7 +40,7 @@ class Kernel extends ConsoleKernel
                                 //distinct users with pages requiring updates.
                                 $Pages = \BookStack\Entities\Models\Page::whereDoesntHave('revisions', function ($query) use($Timestamp){
                                         $query->where('updated_at', '>', $Timestamp);
-                                    })->select('owned_by, id, name')
+                                    })->select(['owned_by', 'id', 'name'])
                                     ->get();
                                 $User = \BookStack\Auth\User::find($UserId);
                                 \Log::info('Notifying '.$User->name.' about '.sizeOf($Pages->toArray()).' pages');
