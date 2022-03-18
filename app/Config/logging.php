@@ -36,19 +36,19 @@ return [
             'ignore_exceptions' => false,
         ],
 
-        'single' => [
-            'driver' => 'single',
-            'path'   => storage_path('logs/laravel.log'),
-            'level'  => 'debug',
-            'days'   => 14,
-        ],
+        // 'single' => [
+        //     'driver' => 'single',
+        //     'path'   => storage_path('logs/laravel.log'),
+        //     'level'  => 'debug',
+        //     'days'   => 14,
+        // ],
 
-        'daily' => [
-            'driver' => 'daily',
-            'path'   => storage_path('logs/laravel.log'),
-            'level'  => 'debug',
-            'days'   => 7,
-        ],
+        // 'daily' => [
+        //     'driver' => 'daily',
+        //     'path'   => storage_path('logs/laravel.log'),
+        //     'level'  => 'debug',
+        //     'days'   => 7,
+        // ],
 
         'stderr' => [
             'driver'  => 'monolog',
@@ -99,6 +99,42 @@ return [
         ],
 
         'cloudwatch' => [
+            'driver' => 'custom',
+            'via' => \BookStack\Logging\CloudWatchLoggerFactory::class,
+            'sdk' => [
+              'region' => env('AWS_REGION', ''),
+              'version' => 'latest',
+              'credentials' => [
+                'key' => env('AWS_KEY'),
+                'secret' => env('AWS_SECRET'),
+              ]
+            ],
+            'include_stack_traces' => env('INCLUDE_STACK_TRACES', 'false'),
+            'retention' => 14,
+            'level' => 'info',
+            'group' => '/api/'.env('DB_DATABASE'),
+            'stream' => Carbon::now()->format('Ymd'),
+            'batch_size' => 1
+        ],
+        'single' => [
+            'driver' => 'custom',
+            'via' => \BookStack\Logging\CloudWatchLoggerFactory::class,
+            'sdk' => [
+              'region' => env('AWS_REGION', ''),
+              'version' => 'latest',
+              'credentials' => [
+                'key' => env('AWS_KEY'),
+                'secret' => env('AWS_SECRET'),
+              ]
+            ],
+            'include_stack_traces' => env('INCLUDE_STACK_TRACES', 'false'),
+            'retention' => 14,
+            'level' => 'info',
+            'group' => '/api/'.env('DB_DATABASE'),
+            'stream' => Carbon::now()->format('Ymd'),
+            'batch_size' => 1
+        ],
+        'daily' => [
             'driver' => 'custom',
             'via' => \BookStack\Logging\CloudWatchLoggerFactory::class,
             'sdk' => [
