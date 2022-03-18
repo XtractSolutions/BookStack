@@ -4,6 +4,7 @@ namespace BookStack\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use BookStack\Notifications\StalePages;
 use Carbon\Carbon;
 
 class Kernel extends ConsoleKernel
