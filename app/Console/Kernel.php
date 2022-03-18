@@ -26,36 +26,38 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(
-            function () {
-                \Log::info('----test log');
-                if (config('ownerNotifications.ownerNotificationChannel') !== '' && config('ownerNotifications.cron') !== '') {
-                    $Timestamp = Carbon::now()->subDays(config('ownerNotifications.staleDocumentThresholdDays'))->toDateTimeString();
-                    \BookStack\Entities\Models\Page::whereDosentHave('revisions', function ($query) use($Timestamp){
-                        $query->where('updated_at','<',$Timestamp);
-                    })->groupBy('created_by')
-                        ->pluck('created_by')
-                        ->each(function($UserId) use($Timestamp){
-                            //distinct users with pages requiring updates.
-                            $Pages = \BookStack\Entities\Models\Page::whereDoesntHave('revisions', function ($query) use($Timestamp){
-                                    $query->where('updated_at', '>', $Timestamp);
-                                })->select('owned_by, id, name')
-                                ->get();
-                            $User = \BookStack\Auth\User::find($UserId);
-                            \Log::info('Notifying '.$User->name.' about '.sizeOf($Pages->toArray()).' pages');
-                            $User->notify(new StalePages($Pages));
-                        });
+        if(config('ownerNotifications.cron') !== '') {
+            $schedule->call(
+                function () {
+                    \Log::info('----test log');
+                    if (config('ownerNotifications.ownerNotificationChannel') !== '' && config('ownerNotifications.cron') !== '') {
+                        $Timestamp = Carbon::now()->subDays(config('ownerNotifications.staleDocumentThresholdDays'))->toDateTimeString();
+                        \BookStack\Entities\Models\Page::whereDoesntHave('revisions', function ($query) use($Timestamp){
+                            $query->where('updated_at','<',$Timestamp);
+                        })->groupBy('created_by')
+                            ->pluck('created_by')
+                            ->each(function($UserId) use($Timestamp){
+                                //distinct users with pages requiring updates.
+                                $Pages = \BookStack\Entities\Models\Page::whereDoesntHave('revisions', function ($query) use($Timestamp){
+                                        $query->where('updated_at', '>', $Timestamp);
+                                    })->select('owned_by, id, name')
+                                    ->get();
+                                $User = \BookStack\Auth\User::find($UserId);
+                                \Log::info('Notifying '.$User->name.' about '.sizeOf($Pages->toArray()).' pages');
+                                $User->notify(new StalePages($Pages));
+                            });
+                    }
                 }
-            }
-        )
-        ->when(function () {
-            return config('ownerNotifications.cron') !== '';
-        })
-        ->name('stale_item_notification')
-        ->cron(config('ownerNotifications.cron'))
-        ->withoutOverlapping()
-        ->runInBackground()
-        ->onOneServer();
+            )
+            ->when(function () {
+                return config('ownerNotifications.cron') !== '';
+            })
+            ->name('stale_item_notification')
+            ->cron(config('ownerNotifications.cron'))
+            ->withoutOverlapping()
+            ->runInBackground()
+            ->onOneServer();
+        }
     }
 
     /**
