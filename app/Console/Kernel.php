@@ -30,7 +30,6 @@ class Kernel extends ConsoleKernel
         if(config('ownerNotifications.cron') !== '') {
             $schedule->call(
                 function () {
-                    \Log::info('----test log');
                     if (config('ownerNotifications.ownerNotificationChannel') !== '' && config('ownerNotifications.cron') !== '') {
                         $Timestamp = Carbon::now()->subDays(config('ownerNotifications.staleDocumentThresholdDays'))->toDateTimeString();
                         \BookStack\Entities\Models\Page::whereDoesntHave('revisions', function ($query) use($Timestamp){
@@ -44,8 +43,10 @@ class Kernel extends ConsoleKernel
                                     })->select(['owned_by', 'id', 'name'])
                                     ->get();
                                 $User = \BookStack\Auth\User::find($UserId);
-                                \Log::info('Notifying '.$User->name.' about '.sizeOf($Pages->toArray()).' pages');
-                                $User->notify(new StalePages($Pages));
+                                if($User->name === 'Andrew Herren') {
+                                    \Log::info('Notifying '.$User->name.' about '.sizeOf($Pages->toArray()).' pages');
+                                    $User->notify(new StalePages($Pages));
+                                }
                             });
                     }
                 }
