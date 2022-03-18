@@ -50,7 +50,8 @@ class StalePages extends Notification
 
     private function addPageList($Message) {
         foreach($this->Pages as $Page) {
-            $Message = $Message->line($Page->name, url(config('app.url') . '/link/' . $Page->id));
+            $Url = config('app.url') . '/link/' . $Page->id;
+            $Message = $Message->line(new HtmlString("<a href={$Url}>{$Page->name}</a>"));
         }
         return $Message;
     }
