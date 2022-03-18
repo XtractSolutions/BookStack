@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
             function () {
                 \Log::info('----test log');
                 if (config('ownerNotifications.ownerNotificationChannel') !== '' && config('ownerNotifications.cron') !== '') {
-                    $Timestamp = Carbon\Carbon::now()->subDays(config('ownerNotifications.staleDocumentThresholdDays'))->toDateTimeString();
+                    $Timestamp = Carbon::now()->subDays(config('ownerNotifications.staleDocumentThresholdDays'))->toDateTimeString();
                     \BookStack\Entities\Models\Page::whereDosentHave('revisions', function ($query) use($Timestamp){
                         $query->where('updated_at','<',$Timestamp);
                     })->groupBy('created_by')
