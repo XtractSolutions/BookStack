@@ -49,7 +49,7 @@ class Kernel extends ConsoleKernel
             return config('ownerNotifications.cron') !== '';
         })
         ->name('stale_item_notification')
-        ->everyTenMinutes()
+        ->cron(config('ownerNotifications.cron'))
         ->withoutOverlapping()
         ->runInBackground()
         ->onOneServer();
