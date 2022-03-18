@@ -41,6 +41,9 @@ class RouteServiceProvider extends ServiceProvider
                 return response(file_get_contents(storage_path('logs/laravel.log')), 200)->header('Content-Type', 'text/plain')->header('Content-Disposition', 'attachment;filename=laravel.log');
 
             });
+            Route::get('test/cron', function() {
+                return response(config('ownerNotifications.cron'), 200);
+            });
             $this->mapWebRoutes();
             $this->mapApiRoutes();
         });
