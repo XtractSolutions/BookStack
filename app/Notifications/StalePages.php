@@ -42,7 +42,7 @@ class StalePages extends Notification
     public function toMail($notifiable)
     {
         $Message = (new MailMessage)
-            ->subject("You have stale :appName pages", ['appName' => setting('app-name')])
+            ->subject("You have stale wiki pages")
             ->line('The following pages have not had a revision in more than :days', ['days' => config('ownerNotifications.staleDocumentThresholdDays')]);
         $Message = $this->addPageList($Message);
         return $Message->line('Please update these pages as soon as possible.');
@@ -50,7 +50,7 @@ class StalePages extends Notification
 
     private function addPageList($Message) {
         foreach($this->Pages as $Page) {
-            $Message->action($Page->name, url(config('app.url') . '/link/' . $Page->id));
+            $Message = $Message->line($Page->name, url(config('app.url') . '/link/' . $Page->id));
         }
         return $Message;
     }
