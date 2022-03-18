@@ -25,9 +25,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        \Log::info('====test');
-        \Log::info(config('ownerNotifications.cron'));
-        \Log::info(config('logging.channels.cloudwatch.sdk.region'));
         $schedule->call(
             function () {
                 \Log::info('----test log');
