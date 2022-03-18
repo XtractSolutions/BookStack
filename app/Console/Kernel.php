@@ -37,7 +37,7 @@ class Kernel extends ConsoleKernel
                         ->pluck('created_by')
                         ->each(function($UserId) use($Timestamp){
                             //distinct users with pages requiring updates.
-                            $Pages = \BookStack\Entities\Models\Page::whereDosentHave('revisions', function ($query) use($Timestamp){
+                            $Pages = \BookStack\Entities\Models\Page::whereDoesntHave('revisions', function ($query) use($Timestamp){
                                     $query->where('updated_at', '>', $Timestamp);
                                 })->select('owned_by, id, name')
                                 ->get();
