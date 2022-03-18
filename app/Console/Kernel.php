@@ -40,7 +40,9 @@ class Kernel extends ConsoleKernel
                                     $query->where('updated_at', '>', $Timestamp);
                                 })->select('owned_by, id, name')
                                 ->get();
-                            \BookStack\Auth\User::find($UserId)->notify(new StalePages($Pages));
+                            $User = \BookStack\Auth\User::find($UserId);
+                            \Log::info('Notifying '.$User->name.' about '.sizeOf($Pages->toArray()).' pages');
+                            $User->notify(new StalePages($Pages));
                         });
                 }
             }
