@@ -102,7 +102,7 @@ return [
             'driver' => 'custom',
             'via' => \BookStack\Logging\CloudWatchLoggerFactory::class,
             'sdk' => [
-              'region' => env('AWS_REGION', ''),
+              'region' => env('AWS_REGION', 'us-west-2'),
               'version' => 'latest',
               'credentials' => [
                 'key' => env('AWS_KEY'),
@@ -120,7 +120,7 @@ return [
             'driver' => 'custom',
             'via' => \BookStack\Logging\CloudWatchLoggerFactory::class,
             'sdk' => [
-              'region' => env('AWS_REGION', ''),
+              'region' => env('AWS_REGION', 'us-west-2'),
               'version' => 'latest',
               'credentials' => [
                 'key' => env('AWS_KEY'),
@@ -138,7 +138,7 @@ return [
             'driver' => 'custom',
             'via' => \BookStack\Logging\CloudWatchLoggerFactory::class,
             'sdk' => [
-              'region' => env('AWS_REGION', ''),
+              'region' => env('AWS_REGION', 'us-west-2'),
               'version' => 'latest',
               'credentials' => [
                 'key' => env('AWS_KEY'),
