@@ -43,13 +43,7 @@ class Kernel extends ConsoleKernel
                                     })->where('owned_by', $UserId)
                                     ->select(['owned_by', 'id', 'name'])
                                     ->get();
-                                $User = \BookStack\Auth\User::find($UserId);
-                                if($User->name === 'Andrew Herren') {
-                                    \Log::info('Notifying '.$User->name.' about '.sizeOf($Pages->toArray()).' pages');
-                                    $User->notify(new StalePages($Pages));
-                                } else {
-                                    \Log::info('Pretend notifying '.$User->name.' about '.sizeOf($Pages->toArray()).' pages');
-                                }
+                                \BookStack\Auth\User::find($UserId)->notify(new StalePages($Pages));
                             });
                     }
                 }
