@@ -27,15 +27,10 @@ class PermissionsUpdater
             $entityPermissionData = $this->formatPermissionsFromRequestToEntityPermissions($permissions);
             $entity->permissions()->createMany($entityPermissionData);
         }
-        \Log::info('doing permission update with owner_id:'.json_encode($ownerId));
         if (!is_null($ownerId) && $ownerId !== '') {
-            \Log::info('saving non null');
             $this->updateOwnerFromId($entity, intval($ownerId));
         } else if(config('ownerNotifications.allowNullOwners')) {
-            \Log::info('saving as null');
             $entity->owned_by = null;
-        } else {
-            \Log::info('settings is: '.config('ownerNotifications.allowNullOwners'));
         }
 
         $entity->save();
