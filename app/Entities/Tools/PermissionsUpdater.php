@@ -27,7 +27,7 @@ class PermissionsUpdater
             $entityPermissionData = $this->formatPermissionsFromRequestToEntityPermissions($permissions);
             $entity->permissions()->createMany($entityPermissionData);
         }
-        \log::info('doing permission update with owner_id:'.json_encode($ownerId));
+        \Log::info('doing permission update with owner_id:'.json_encode($ownerId));
         if (!is_null($ownerId) && $ownerId !== '') {
             \Log::info('saving non null');
             $this->updateOwnerFromId($entity, intval($ownerId));
