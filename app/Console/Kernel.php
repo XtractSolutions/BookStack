@@ -34,8 +34,9 @@ class Kernel extends ConsoleKernel
                         $Timestamp = Carbon::now()->subDays(config('ownerNotifications.staleDocumentThresholdDays'))->toDateTimeString();
                         \BookStack\Entities\Models\Page::whereDoesntHave('revisions', function ($query) use($Timestamp){
                             $query->where('updated_at','>',$Timestamp);
-                        })->groupBy('created_by')
-                            ->pluck('created_by')
+                        })->whereNotNull('owned_by')
+                            ->groupBy('owned_by')
+                            ->pluck('owned_by')
                             ->each(function($UserId) use($Timestamp){
                                 //distinct users with pages requiring updates.
                                 $Pages = \BookStack\Entities\Models\Page::whereDoesntHave('revisions', function ($query) use($Timestamp){
