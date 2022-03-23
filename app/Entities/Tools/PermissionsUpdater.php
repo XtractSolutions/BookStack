@@ -35,7 +35,7 @@ class PermissionsUpdater
             \Log::info('saving as null');
             $entity->owned_by = null;
         } else {
-            \Log::info('settings is: '.config('ownerNotifications.allowNullOwners'))
+            \Log::info('settings is: '.config('ownerNotifications.allowNullOwners'));
         }
 
         $entity->save();
