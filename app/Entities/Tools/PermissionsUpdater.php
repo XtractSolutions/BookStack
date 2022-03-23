@@ -28,9 +28,12 @@ class PermissionsUpdater
             $entity->permissions()->createMany($entityPermissionData);
         }
 
-        if (!is_null($ownerId)) {
+        if (!is_null($ownerId) && $ownerId !== '') {
             $this->updateOwnerFromId($entity, intval($ownerId));
+        } else if(config('ownerNotifications.allowNullOwners')) {
+            $entity->owned_by = null;
         }
+
 
         $entity->save();
         $entity->rebuildPermissions();

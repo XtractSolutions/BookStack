@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\HtmlString;
 
 class StalePages extends Notification
 {
@@ -41,19 +42,19 @@ class StalePages extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-            ->subject("You have stale :appName pages", ['appName' => setting('app-name')])
-            ->line('The following pages have not had a revision in more than :days', ['days' => config('owner-notifications.staleDocumentThresholdDays')])
-            ->addPageList($this->Pages)
-            ->action(trans('auth.reset_password'), url('password/reset/' . $this->token))
-            ->line('Please update these pages as soon as possible.');
+        $Message = (new MailMessage)
+            ->subject("You have stale wiki pages")
+            ->line('The following pages have not had a revision in more than :days', ['days' => config('ownerNotifications.staleDocumentThresholdDays')]);
+        $Message = $this->addPageList($Message);
+        return $Message->line('Please update these pages as soon as possible.');
     }
 
-    private function addPageList($Pages) {
-        foreach($Pages as $Page) {
-            $this->action($Page->name, url(config('app.url') . '/link/' . $Page->id));
+    private function addPageList($Message) {
+        foreach($this->Pages as $Page) {
+            $Url = config('app.url') . '/link/' . $Page->id;
+            $Message = $Message->line(new HtmlString("<a href={$Url}>{$Page->name}</a>"));
         }
-        return $this;
+        return $Message;
     }
 
     /**
