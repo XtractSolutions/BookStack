@@ -11,5 +11,6 @@
 return [
     'ownerNotificationChannel' => env('OWNER_NOTIFICATION_CHANNEL',''),
     'staleDocumentThresholdDays' => env('OWNER_NOTIFICATION_THRESHOLD_DAYS', 180),
-    'cron' => env('OWNER_NOTIFICATION_CRON', '')
+    'cron' => env('OWNER_NOTIFICATION_CRON', ''),
+    'allowNullOwners' => env('OWNER_NOTIFICATION_ALLOW_NULL_OWNER', true)
 ];
