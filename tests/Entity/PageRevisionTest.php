@@ -2,12 +2,24 @@
 
 namespace Tests\Entity;
 
+use BookStack\Actions\ActivityType;
 use BookStack\Entities\Models\Page;
 use BookStack\Entities\Repos\PageRepo;
 use Tests\TestCase;
 
 class PageRevisionTest extends TestCase
 {
+    public function test_revision_links_visible_to_viewer()
+    {
+        /** @var Page $page */
+        $page = Page::query()->first();
+
+        $html = $this->withHtml($this->asViewer()->get($page->getUrl()));
+        $html->assertLinkExists($page->getUrl('/revisions'));
+        $html->assertElementContains('a', 'Revisions');
+        $html->assertElementContains('a', 'Revision #1');
+    }
+
     public function test_page_revision_views_viewable()
     {
         $this->asEditor();
@@ -117,6 +129,9 @@ class PageRevisionTest extends TestCase
             'type'    => 'version',
             'summary' => "Restored from #{$revToRestore->id}; My first update",
         ]);
+
+        $detail = "Revision #{$revToRestore->revision_number} (ID: {$revToRestore->id}) for page ID {$revToRestore->page_id}";
+        $this->assertActivityExists(ActivityType::REVISION_RESTORE, null, $detail);
     }
 
     public function test_page_revision_count_increments_on_update()
@@ -144,13 +159,14 @@ class PageRevisionTest extends TestCase
 
     public function test_revision_deletion()
     {
-        $page = Page::first();
+        /** @var Page $page */
+        $page = Page::query()->first();
         $this->asEditor()->put($page->getUrl(), ['name' => 'Updated page', 'html' => 'new page html', 'summary' => 'Update a']);
 
-        $page = Page::find($page->id);
+        $page->refresh();
         $this->asEditor()->put($page->getUrl(), ['name' => 'Updated page', 'html' => 'new page html', 'summary' => 'Update a']);
 
-        $page = Page::find($page->id);
+        $page->refresh();
         $beforeRevisionCount = $page->revisions->count();
 
         // Delete the first revision
@@ -158,18 +174,20 @@ class PageRevisionTest extends TestCase
         $resp = $this->asEditor()->delete($revision->getUrl('/delete/'));
         $resp->assertRedirect($page->getUrl('/revisions'));
 
-        $page = Page::find($page->id);
+        $page->refresh();
         $afterRevisionCount = $page->revisions->count();
 
         $this->assertTrue($beforeRevisionCount === ($afterRevisionCount + 1));
 
+        $detail = "Revision #{$revision->revision_number} (ID: {$revision->id}) for page ID {$revision->page_id}";
+        $this->assertActivityExists(ActivityType::REVISION_DELETE, null, $detail);
+
         // Try to delete the latest revision
         $beforeRevisionCount = $page->revisions->count();
-        $currentRevision = $page->getCurrentRevision();
-        $resp = $this->asEditor()->delete($currentRevision->getUrl('/delete/'));
+        $resp = $this->asEditor()->delete($page->currentRevision->getUrl('/delete/'));
         $resp->assertRedirect($page->getUrl('/revisions'));
 
-        $page = Page::find($page->id);
+        $page->refresh();
         $afterRevisionCount = $page->revisions->count();
         $this->assertTrue($beforeRevisionCount === $afterRevisionCount);
     }
@@ -202,5 +220,20 @@ class PageRevisionTest extends TestCase
 
         $revisionCount = $page->revisions()->count();
         $this->assertEquals(12, $revisionCount);
+    }
+
+    public function test_revision_list_shows_editor_type()
+    {
+        /** @var Page $page */
+        $page = Page::first();
+        $this->asAdmin()->put($page->getUrl(), ['name' => 'Updated page', 'html' => 'new page html']);
+
+        $resp = $this->get($page->refresh()->getUrl('/revisions'));
+        $this->withHtml($resp)->assertElementContains('td', '(WYSIWYG)');
+        $this->withHtml($resp)->assertElementNotContains('td', '(Markdown)');
+
+        $this->asAdmin()->put($page->getUrl(), ['name' => 'Updated page', 'markdown' => '# Some markdown content']);
+        $resp = $this->get($page->refresh()->getUrl('/revisions'));
+        $this->withHtml($resp)->assertElementContains('td', '(Markdown)');
     }
 }

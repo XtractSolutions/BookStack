@@ -25,12 +25,12 @@ return [
     'forgot_password' => 'Passwort vergessen?',
     'remember_me' => 'Angemeldet bleiben',
     'ldap_email_hint' => 'Bitte geben Sie eine E-Mail-Adresse ein, um diese mit dem Account zu nutzen.',
-    'create_account' => 'Account registrieren',
-    'already_have_account' => 'Bereits ein Konto erstellt?',
-    'dont_have_account' => 'Noch kein Konto erstellt?',
+    'create_account' => 'Account erstellen',
+    'already_have_account' => 'Sie haben bereits einen Account?',
+    'dont_have_account' => 'Sie haben noch keinen Account?',
     'social_login' => 'Mit Sozialem Netzwerk anmelden',
     'social_registration' => 'Mit Sozialem Netzwerk registrieren',
-    'social_registration_text' => 'Mit einer dieser Dienste registrieren oder anmelden',
+    'social_registration_text' => 'Mit einem anderen Dienst registrieren oder anmelden.',
 
     'register_thanks' => 'Vielen Dank für Ihre Registrierung!',
     'register_confirm' => 'Bitte prüfen Sie Ihren Posteingang und bestätigen Sie die Registrierung.',
@@ -38,10 +38,15 @@ return [
     'registration_email_domain_invalid' => 'Sie können sich mit dieser E-Mail nicht registrieren.',
     'register_success' => 'Vielen Dank für Ihre Registrierung! Die Daten sind gespeichert und Sie sind angemeldet.',
 
+    // Login auto-initiation
+    'auto_init_starting' => 'Anmeldeversuche',
+    'auto_init_starting_desc' => 'Wir verbinden und mit Ihrem Authentifizierungssystem um den Anmeldeprozess zu starten. Sollte es nach 5 Sekunden nicht weitergehen, klicken Sie bitte auf den unten stehenden Link.',
+    'auto_init_start_link' => 'Mit Authentifizierung fortfahren',
+
     // Password Reset
-    'reset_password' => 'Passwort vergessen',
+    'reset_password' => 'Passwort zurücksetzen',
     'reset_password_send_instructions' => 'Bitte geben Sie Ihre E-Mail-Adresse ein. Danach erhalten Sie eine E-Mail mit einem Link zum Zurücksetzen Ihres Passwortes.',
-    'reset_password_send_button' => 'Passwort zurücksetzen',
+    'reset_password_send_button' => 'Link zum Zurücksetzen senden',
     'reset_password_sent' => 'Ein Link zum Zurücksetzen des Passworts wird an :email gesendet, wenn diese E-Mail-Adresse im System gefunden wird.',
     'reset_password_success' => 'Ihr Passwort wurde erfolgreich zurückgesetzt.',
     'email_reset_subject' => 'Passwort zurücksetzen für :appName',
@@ -70,7 +75,7 @@ return [
     'user_invite_email_action' => 'Account-Passwort festlegen',
     'user_invite_page_welcome' => 'Willkommen bei :appName!',
     'user_invite_page_text' => 'Um die Anmeldung abzuschließen und Zugriff auf :appName zu bekommen muss noch ein Passwort festgelegt werden. Dieses wird in Zukunft zum Einloggen benötigt.',
-    'user_invite_page_confirm_button' => 'Passwort wiederholen',
+    'user_invite_page_confirm_button' => 'Passwort bestätigen',
     'user_invite_success_login' => 'Passwort gesetzt, Sie sollten nun in der Lage sein, sich mit Ihrem Passwort an :appName anzumelden!',
 
     // Multi-factor Authentication

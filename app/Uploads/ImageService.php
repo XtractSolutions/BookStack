@@ -2,9 +2,13 @@
 
 namespace BookStack\Uploads;
 
+use BookStack\Entities\Models\Book;
+use BookStack\Entities\Models\Bookshelf;
+use BookStack\Entities\Models\Page;
 use BookStack\Exceptions\ImageUploadException;
 use ErrorException;
 use Exception;
+use GuzzleHttp\Psr7\Utils;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Contracts\Filesystem\Filesystem as Storage;
@@ -14,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Intervention\Image\Exception\NotSupportedException;
+use Intervention\Image\Image as InterventionImage;
 use Intervention\Image\ImageManager;
 use League\Flysystem\Util;
 use Psr\SimpleCache\InvalidArgumentException;
@@ -22,20 +27,15 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ImageService
 {
-    protected $imageTool;
-    protected $cache;
+    protected ImageManager $imageTool;
+    protected Cache $cache;
     protected $storageUrl;
-    protected $image;
-    protected $fileSystem;
+    protected FilesystemManager $fileSystem;
 
     protected static $supportedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
-    /**
-     * ImageService constructor.
-     */
-    public function __construct(Image $image, ImageManager $imageTool, FilesystemManager $fileSystem, Cache $cache)
+    public function __construct(ImageManager $imageTool, FilesystemManager $fileSystem, Cache $cache)
     {
-        $this->image = $image;
         $this->imageTool = $imageTool;
         $this->fileSystem = $fileSystem;
         $this->cache = $cache;
@@ -53,9 +53,18 @@ class ImageService
      * Check if local secure image storage (Fetched behind authentication)
      * is currently active in the instance.
      */
-    protected function usingSecureImages(): bool
+    protected function usingSecureImages(string $imageType = 'gallery'): bool
     {
-        return $this->getStorageDiskName('gallery') === 'local_secure_images';
+        return $this->getStorageDiskName($imageType) === 'local_secure_images';
+    }
+
+    /**
+     * Check if "local secure restricted" (Fetched behind auth, with permissions enforced)
+     * is currently active in the instance.
+     */
+    protected function usingSecureRestrictedImages()
+    {
+        return config('filesystems.images') === 'local_secure_restricted';
     }
 
     /**
@@ -66,7 +75,7 @@ class ImageService
     {
         $path = Util::normalizePath(str_replace('uploads/images/', '', $path));
 
-        if ($this->getStorageDiskName($imageType) === 'local_secure_images') {
+        if ($this->usingSecureImages($imageType)) {
             return $path;
         }
 
@@ -85,7 +94,9 @@ class ImageService
             $storageType = 'local';
         }
 
-        if ($storageType === 'local_secure') {
+        // Rename local_secure options to get our image specific storage driver which
+        // is scoped to the relevant image directories.
+        if ($storageType === 'local_secure' || $storageType === 'local_secure_restricted') {
             $storageType = 'local_secure_images';
         }
 
@@ -177,8 +188,8 @@ class ImageService
             $imageDetails['updated_by'] = $userId;
         }
 
-        $image = $this->image->newInstance();
-        $image->forceFill($imageDetails)->save();
+        $image = (new Image())->forceFill($imageDetails);
+        $image->save();
 
         return $image;
     }
@@ -304,9 +315,11 @@ class ImageService
     {
         try {
             $thumb = $this->imageTool->make($imageData);
-        } catch (ErrorException|NotSupportedException $e) {
+        } catch (ErrorException | NotSupportedException $e) {
             throw new ImageUploadException(trans('errors.cannot_create_thumbs'));
         }
+
+        $this->orientImageToOriginalExif($thumb, $imageData);
 
         if ($keepRatio) {
             $thumb->resize($width, $height, function ($constraint) {
@@ -326,6 +339,49 @@ class ImageService
         }
 
         return $thumbData;
+    }
+
+    /**
+     * Orientate the given intervention image based upon the given original image data.
+     * Intervention does have an `orientate` method but the exif data it needs is lost before it
+     * can be used (At least when created using binary string data) so we need to do some
+     * implementation on our side to use the original image data.
+     * Bulk of logic taken from: https://github.com/Intervention/image/blob/b734a4988b2148e7d10364b0609978a88d277536/src/Intervention/Image/Commands/OrientateCommand.php
+     * Copyright (c) Oliver Vogel, MIT License.
+     */
+    protected function orientImageToOriginalExif(InterventionImage $image, string $originalData): void
+    {
+        if (!extension_loaded('exif')) {
+            return;
+        }
+
+        $stream = Utils::streamFor($originalData)->detach();
+        $exif = @exif_read_data($stream);
+        $orientation = $exif ? ($exif['Orientation'] ?? null) : null;
+
+        switch ($orientation) {
+            case 2:
+                $image->flip();
+                break;
+            case 3:
+                $image->rotate(180);
+                break;
+            case 4:
+                $image->rotate(180)->flip();
+                break;
+            case 5:
+                $image->rotate(270)->flip();
+                break;
+            case 6:
+                $image->rotate(270);
+                break;
+            case 7:
+                $image->rotate(90)->flip();
+                break;
+            case 8:
+                $image->rotate(90);
+                break;
+        }
     }
 
     /**
@@ -404,7 +460,7 @@ class ImageService
         $types = ['gallery', 'drawio'];
         $deletedPaths = [];
 
-        $this->image->newQuery()->whereIn('type', $types)
+        Image::query()->whereIn('type', $types)
             ->chunk(1000, function ($images) use ($checkRevisions, &$deletedPaths, $dryRun) {
                 foreach ($images as $image) {
                     $searchQuery = '%' . basename($image->path) . '%';
@@ -445,6 +501,14 @@ class ImageService
         }
 
         $storagePath = $this->adjustPathForStorageDisk($storagePath);
+
+        // Apply access control when local_secure_restricted images are active
+        if ($this->usingSecureRestrictedImages()) {
+            if (!$this->checkUserHasAccessToRelationOfImageAtPath($storagePath)) {
+                return null;
+            }
+        }
+
         $storage = $this->getStorageDisk();
         $imageData = null;
         if ($storage->exists($storagePath)) {
@@ -464,13 +528,18 @@ class ImageService
     }
 
     /**
-     * Check if the given path exists in the local secure image system.
-     * Returns false if local_secure is not in use.
+     * Check if the given path exists and is accessible in the local secure image system.
+     * Returns false if local_secure is not in use, if the file does not exist, if the
+     * file is likely not a valid image, or if permission does not allow access.
      */
-    public function pathExistsInLocalSecure(string $imagePath): bool
+    public function pathAccessibleInLocalSecure(string $imagePath): bool
     {
         /** @var FilesystemAdapter $disk */
         $disk = $this->getStorageDisk('gallery');
+
+        if ($this->usingSecureRestrictedImages() && !$this->checkUserHasAccessToRelationOfImageAtPath($imagePath)) {
+            return false;
+        }
 
         // Check local_secure is active
         return $this->usingSecureImages()
@@ -479,6 +548,55 @@ class ImageService
             && $disk->exists($imagePath)
             // Check the file is likely an image file
             && strpos($disk->getMimetype($imagePath), 'image/') === 0;
+    }
+
+    /**
+     * Check that the current user has access to the relation
+     * of the image at the given path.
+     */
+    protected function checkUserHasAccessToRelationOfImageAtPath(string $path): bool
+    {
+        if (strpos($path, '/uploads/images/') === 0) {
+            $path = substr($path, 15);
+        }
+
+        // Strip thumbnail element from path if existing
+        $originalPathSplit = array_filter(explode('/', $path), function (string $part) {
+            $resizedDir = (strpos($part, 'thumbs-') === 0 || strpos($part, 'scaled-') === 0);
+            $missingExtension = strpos($part, '.') === false;
+
+            return !($resizedDir && $missingExtension);
+        });
+
+        // Build a database-format image path and search for the image entry
+        $fullPath = '/uploads/images/' . ltrim(implode('/', $originalPathSplit), '/');
+        $image = Image::query()->where('path', '=', $fullPath)->first();
+
+        if (is_null($image)) {
+            return false;
+        }
+
+        $imageType = $image->type;
+
+        // Allow user or system (logo) images
+        // (No specific relation control but may still have access controlled by auth)
+        if ($imageType === 'user' || $imageType === 'system') {
+            return true;
+        }
+
+        if ($imageType === 'gallery' || $imageType === 'drawio') {
+            return Page::visible()->where('id', '=', $image->uploaded_to)->exists();
+        }
+
+        if ($imageType === 'cover_book') {
+            return Book::visible()->where('id', '=', $image->uploaded_to)->exists();
+        }
+
+        if ($imageType === 'cover_bookshelf') {
+            return Bookshelf::visible()->where('id', '=', $image->uploaded_to)->exists();
+        }
+
+        return false;
     }
 
     /**

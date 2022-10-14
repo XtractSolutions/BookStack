@@ -11,7 +11,7 @@ return [
     'save' => 'Opslaan',
     'continue' => 'Doorgaan',
     'select' => 'Selecteer',
-    'toggle_all' => 'Toggle alle',
+    'toggle_all' => 'Wissel Alles',
     'more' => 'Meer',
 
     // Form Labels
@@ -47,6 +47,8 @@ return [
     'previous' => 'Vorige',
     'filter_active' => 'Actieve Filter:',
     'filter_clear' => 'Wis Filter',
+    'download' => 'Download',
+    'open_in_tab' => 'Open als Tabblad',
 
     // Sort Options
     'sort_options' => 'Sorteeropties',

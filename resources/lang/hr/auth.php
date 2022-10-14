@@ -18,10 +18,10 @@ return [
 
     'name' => 'Ime',
     'username' => 'Korisničko ime',
-    'email' => 'Email',
+    'email' => 'E-pošta',
     'password' => 'Lozinka',
     'password_confirm' => 'Potvrdite lozinku',
-    'password_hint' => 'Must be at least 8 characters',
+    'password_hint' => 'Mora biti najmanje 8 znakova',
     'forgot_password' => 'Zaboravili ste lozinku?',
     'remember_me' => 'Zapamti me',
     'ldap_email_hint' => 'Molimo upišite mail korišten za ovaj račun.',
@@ -37,6 +37,11 @@ return [
     'registrations_disabled' => 'Registracije su trenutno onemogućene',
     'registration_email_domain_invalid' => 'Ova e-mail adresa se ne može koristiti u ovoj aplikaciji',
     'register_success' => 'Hvala na prijavi! Sada ste registrirani i prijavljeni.',
+
+    // Login auto-initiation
+    'auto_init_starting' => 'Attempting Login',
+    'auto_init_starting_desc' => 'We\'re contacting your authentication system to start the login process. If there\'s no progress after 5 seconds you can try clicking the link below.',
+    'auto_init_start_link' => 'Proceed with authentication',
 
     // Password Reset
     'reset_password' => 'Promijenite lozinku',

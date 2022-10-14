@@ -80,7 +80,7 @@ class AttachmentTest extends TestCase
 
         $expectedResp = [
             'name'       => $fileName,
-            'uploaded_to'=> $page->id,
+            'uploaded_to' => $page->id,
             'extension'  => 'txt',
             'order'      => 1,
             'created_by' => $admin->id,
@@ -128,7 +128,8 @@ class AttachmentTest extends TestCase
         $pageGet->assertSee($attachment->getUrl());
 
         $attachmentGet = $this->get($attachment->getUrl());
-        $attachmentGet->assertSee('Hi, This is a test file for testing the upload process.');
+        $content = $attachmentGet->streamedContent();
+        $this->assertStringContainsString('Hi, This is a test file for testing the upload process.', $content);
 
         $this->deleteUploads();
     }
@@ -338,6 +339,21 @@ class AttachmentTest extends TestCase
         $attachmentGet->assertHeader('Content-Type', 'text/plain; charset=UTF-8');
         $attachmentGet->assertHeader('Content-Disposition', 'inline; filename="test_file.html"');
 
+        $this->deleteUploads();
+    }
+
+    public function test_file_upload_works_when_local_secure_restricted_is_in_use()
+    {
+        config()->set('filesystems.attachments', 'local_secure_restricted');
+
+        $page = Page::query()->first();
+        $fileName = 'upload_test_file.txt';
+
+        $upload = $this->asAdmin()->uploadFile($fileName, $page->id);
+        $upload->assertStatus(200);
+
+        $attachment = Attachment::query()->orderBy('id', 'desc')->where('uploaded_to', '=', $page->id)->first();
+        $this->assertFileExists(storage_path($attachment->path));
         $this->deleteUploads();
     }
 }

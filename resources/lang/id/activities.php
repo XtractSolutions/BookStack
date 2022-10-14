@@ -7,7 +7,7 @@ return [
 
     // Pages
     'page_create'                 => 'telah membuat halaman',
-    'page_create_notification'    => 'Page successfully created',
+    'page_create_notification'    => 'Jenis Halaman berhasil dibuat',
     'page_update'                 => 'halaman telah diperbaharui',
     'page_update_notification'    => 'Page successfully updated',
     'page_delete'                 => 'halaman dihapus',
@@ -28,6 +28,8 @@ return [
     // Books
     'book_create'                 => 'membuat buku',
     'book_create_notification'    => 'Book successfully created',
+    'book_create_from_chapter'              => 'converted chapter to book',
+    'book_create_from_chapter_notification' => 'Chapter successfully converted to a book',
     'book_update'                 => 'update buku',
     'book_update_notification'    => 'Book successfully updated',
     'book_delete'                 => 'hapus buku',
@@ -36,12 +38,14 @@ return [
     'book_sort_notification'      => 'Book successfully re-sorted',
 
     // Bookshelves
-    'bookshelf_create'            => 'created bookshelf',
-    'bookshelf_create_notification'    => 'Bookshelf successfully created',
-    'bookshelf_update'                 => 'update rak',
-    'bookshelf_update_notification'    => 'Bookshelf successfully updated',
-    'bookshelf_delete'                 => 'hapus rak buku',
-    'bookshelf_delete_notification'    => 'Bookshelf successfully deleted',
+    'bookshelf_create'            => 'created shelf',
+    'bookshelf_create_notification'    => 'Shelf successfully created',
+    'bookshelf_create_from_book'    => 'converted book to shelf',
+    'bookshelf_create_from_book_notification'    => 'Book successfully converted to a shelf',
+    'bookshelf_update'                 => 'updated shelf',
+    'bookshelf_update_notification'    => 'Shelf successfully updated',
+    'bookshelf_delete'                 => 'deleted shelf',
+    'bookshelf_delete_notification'    => 'Shelf successfully deleted',
 
     // Favourites
     'favourite_add_notification' => '":name" telah ditambahkan ke favorit Anda',

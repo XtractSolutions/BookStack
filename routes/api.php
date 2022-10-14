@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Routes for the BookStack API.
+ * Routes have a uri prefix of /api/.
+ * Controllers are all within app/Http/Controllers/Api.
+ */
+
 use BookStack\Http\Controllers\Api\ApiDocsController;
 use BookStack\Http\Controllers\Api\AttachmentApiController;
 use BookStack\Http\Controllers\Api\BookApiController;
@@ -9,15 +15,11 @@ use BookStack\Http\Controllers\Api\ChapterApiController;
 use BookStack\Http\Controllers\Api\ChapterExportApiController;
 use BookStack\Http\Controllers\Api\PageApiController;
 use BookStack\Http\Controllers\Api\PageExportApiController;
+use BookStack\Http\Controllers\Api\RecycleBinApiController;
 use BookStack\Http\Controllers\Api\SearchApiController;
 use BookStack\Http\Controllers\Api\UserApiController;
 use Illuminate\Support\Facades\Route;
 
-/**
- * Routes for the BookStack API.
- * Routes have a uri prefix of /api/.
- * Controllers are all within app/Http/Controllers/Api.
- */
 Route::get('docs.json', [ApiDocsController::class, 'json']);
 
 Route::get('attachments', [AttachmentApiController::class, 'list']);
@@ -72,3 +74,7 @@ Route::post('users', [UserApiController::class, 'create']);
 Route::get('users/{id}', [UserApiController::class, 'read']);
 Route::put('users/{id}', [UserApiController::class, 'update']);
 Route::delete('users/{id}', [UserApiController::class, 'delete']);
+
+Route::get('recycle-bin', [RecycleBinApiController::class, 'list']);
+Route::put('recycle-bin/{deletionId}', [RecycleBinApiController::class, 'restore']);
+Route::delete('recycle-bin/{deletionId}', [RecycleBinApiController::class, 'destroy']);

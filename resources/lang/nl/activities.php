@@ -28,6 +28,8 @@ return [
     // Books
     'book_create'                 => 'maakte boek',
     'book_create_notification'    => 'Boek succesvol aangemaakt',
+    'book_create_from_chapter'              => 'hoofdstuk omzetten naar boek',
+    'book_create_from_chapter_notification' => 'Hoofdstuk is omgezet naar een boek',
     'book_update'                 => 'wijzigde boek',
     'book_update_notification'    => 'Boek succesvol bijgewerkt',
     'book_delete'                 => 'verwijderde boek',
@@ -36,12 +38,14 @@ return [
     'book_sort_notification'      => 'Boek succesvol opnieuw gesorteerd',
 
     // Bookshelves
-    'bookshelf_create'            => 'boekenplank aangemaakt',
-    'bookshelf_create_notification'    => 'Boekenplank succesvol aangemaakt',
-    'bookshelf_update'                 => 'wijzigde boekenplank',
-    'bookshelf_update_notification'    => 'Boekenplank succesvol bijgewerkt',
-    'bookshelf_delete'                 => 'verwijderde boekenplank',
-    'bookshelf_delete_notification'    => 'Boekenplank succesvol verwijderd',
+    'bookshelf_create'            => 'heeft boekenplank aangemaakt',
+    'bookshelf_create_notification'    => 'Boekenplank is succesvol aangemaakt',
+    'bookshelf_create_from_book'    => 'heeft boek geconverteerd naar boekenplank',
+    'bookshelf_create_from_book_notification'    => 'Boek is succesvol geconverteerd naar boekenplank',
+    'bookshelf_update'                 => 'heeft boekenplank bijgewerkt',
+    'bookshelf_update_notification'    => 'Boekenplank is succesvol bijgewerkt',
+    'bookshelf_delete'                 => 'heeft boekenplank verwijderd',
+    'bookshelf_delete_notification'    => 'Boekenplank is succesvol verwijderd',
 
     // Favourites
     'favourite_add_notification' => '":name" is toegevoegd aan je favorieten',

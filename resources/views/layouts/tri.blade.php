@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-@section('body-class', 'tri-layout')
+@push('body-class', 'tri-layout ')
 @section('content-components', 'tri-layout')
 
 @section('content')
@@ -27,7 +27,7 @@
 
     <div refs="tri-layout@container" class="tri-layout-container" @yield('container-attrs') >
 
-        <div class="tri-layout-left print-hidden pt-m" id="sidebar">
+        <div class="tri-layout-left print-hidden" id="sidebar">
             <aside class="tri-layout-left-contents">
                 @yield('left')
             </aside>
@@ -39,7 +39,7 @@
             </div>
         </div>
 
-        <div class="tri-layout-right print-hidden pt-m">
+        <div class="tri-layout-right print-hidden">
             <aside class="tri-layout-right-contents">
                 @yield('right')
             </aside>

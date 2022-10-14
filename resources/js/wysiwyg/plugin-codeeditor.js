@@ -86,7 +86,13 @@ function defineCodeBlockCustomElement(editor) {
         getContent() {
             const code = this.querySelector('code') || this.querySelector('pre');
             const tempEl = document.createElement('pre');
-            tempEl.innerHTML = code.innerHTML.replace().replace(/<br\s*[\/]?>/gi ,'\n').replace(/\ufeff/g, '');
+            tempEl.innerHTML = code.innerHTML.replace(/\ufeff/g, '');
+
+            const brs = tempEl.querySelectorAll('br');
+            for (const br of brs) {
+                br.replaceWith('\n');
+            }
+
             return tempEl.textContent;
         }
 
@@ -97,11 +103,16 @@ function defineCodeBlockCustomElement(editor) {
             }
 
             this.cleanChildContent();
+            const content = this.getContent();
+            const lines = content.split('\n').length;
+            const height = (lines * 19.2) + 18 + 24;
+            this.style.height = `${height}px`;
 
             const container = this.shadowRoot.querySelector('.CodeMirrorContainer');
             const renderCodeMirror = (Code) => {
-                this.cm = Code.wysiwygView(container, this.getContent(), this.getLanguage());
-                Code.updateLayout(this.cm);
+                this.cm = Code.wysiwygView(container, content, this.getLanguage());
+                setTimeout(() => Code.updateLayout(this.cm), 10);
+                setTimeout(() => this.style.height = null, 12);
             };
 
             window.importVersioned('code').then((Code) => {
@@ -171,7 +182,7 @@ function register(editor, url) {
     editor.on('PreInit', () => {
         editor.parser.addNodeFilter('pre', function(elms) {
             for (const el of elms) {
-                const wrapper = new tinymce.html.Node.create('code-block', {
+                const wrapper = tinymce.html.Node.create('code-block', {
                     contenteditable: 'false',
                 });
 

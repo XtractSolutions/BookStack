@@ -86,15 +86,11 @@ class Bookshelf extends Entity implements HasCoverImage
      */
     public function coverImageTypeKey(): string
     {
-        return 'cover_shelf';
+        return 'cover_bookshelf';
     }
 
     /**
      * Check if this shelf contains the given book.
-     *
-     * @param Book $book
-     *
-     * @return bool
      */
     public function contains(Book $book): bool
     {
@@ -103,8 +99,6 @@ class Bookshelf extends Entity implements HasCoverImage
 
     /**
      * Add a book to the end of this shelf.
-     *
-     * @param Book $book
      */
     public function appendBook(Book $book)
     {

@@ -28,6 +28,8 @@ return [
     // Books
     'book_create'                 => 'vytvoril(a) knihu',
     'book_create_notification'    => 'Kniha úspešne vytvorená',
+    'book_create_from_chapter'              => 'kapitola konvertovaná na knihu',
+    'book_create_from_chapter_notification' => 'Kapitola úspešne konvertovaná na knihu',
     'book_update'                 => 'aktualizoval(a) knihu',
     'book_update_notification'    => 'Kniha úspešne aktualizovaná',
     'book_delete'                 => 'odstránil(a) knihu',
@@ -36,12 +38,14 @@ return [
     'book_sort_notification'      => 'Kniha úspešne znovu zoradená',
 
     // Bookshelves
-    'bookshelf_create'            => 'vytvoril(a) knižnicu',
-    'bookshelf_create_notification'    => 'Knižnica úspešne vytvorená',
-    'bookshelf_update'                 => 'aktualizoval(a) knižnicu',
-    'bookshelf_update_notification'    => 'Knižnica úspešne aktualizovaná',
-    'bookshelf_delete'                 => 'odstránil(a) knižnicu',
-    'bookshelf_delete_notification'    => 'Knižnica úspešne odstránená',
+    'bookshelf_create'            => 'created shelf',
+    'bookshelf_create_notification'    => 'Shelf successfully created',
+    'bookshelf_create_from_book'    => 'converted book to shelf',
+    'bookshelf_create_from_book_notification'    => 'Kniha úspešne konvertovaná na poličku',
+    'bookshelf_update'                 => 'updated shelf',
+    'bookshelf_update_notification'    => 'Shelf successfully updated',
+    'bookshelf_delete'                 => 'deleted shelf',
+    'bookshelf_delete_notification'    => 'Shelf successfully deleted',
 
     // Favourites
     'favourite_add_notification' => '":name" bol pridaný medzi obľúbené',
@@ -60,8 +64,8 @@ return [
     'webhook_delete_notification' => 'Webhook úspešne odstránený',
 
     // Users
-    'user_update_notification' => 'User successfully updated',
-    'user_delete_notification' => 'User successfully removed',
+    'user_update_notification' => 'Používateľ úspešne upravený',
+    'user_delete_notification' => 'Používateľ úspešne zmazaný',
 
     // Other
     'commented_on'                => 'komentoval(a)',

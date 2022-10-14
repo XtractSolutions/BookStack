@@ -2,27 +2,31 @@
 
 namespace BookStack\Entities\Models;
 
+use BookStack\Auth\Permissions\PermissionApplicator;
 use BookStack\Entities\Tools\PageContent;
-use BookStack\Facades\Permissions;
 use BookStack\Uploads\Attachment;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * Class Page.
  *
- * @property int        $chapter_id
- * @property string     $html
- * @property string     $markdown
- * @property string     $text
- * @property bool       $template
- * @property bool       $draft
- * @property int        $revision_count
- * @property Chapter    $chapter
- * @property Collection $attachments
+ * @property int          $chapter_id
+ * @property string       $html
+ * @property string       $markdown
+ * @property string       $text
+ * @property bool         $template
+ * @property bool         $draft
+ * @property int          $revision_count
+ * @property string       $editor
+ * @property Chapter      $chapter
+ * @property Collection   $attachments
+ * @property Collection   $revisions
+ * @property PageRevision $currentRevision
  */
 class Page extends BookChild
 {
@@ -47,7 +51,7 @@ class Page extends BookChild
      */
     public function scopeVisible(Builder $query): Builder
     {
-        $query = Permissions::enforceDraftVisibilityOnQuery($query);
+        $query = app()->make(PermissionApplicator::class)->restrictDraftsOnPageQuery($query);
 
         return parent::scopeVisible($query);
     }
@@ -77,6 +81,19 @@ class Page extends BookChild
     public function revisions(): HasMany
     {
         return $this->allRevisions()
+            ->where('type', '=', 'version')
+            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc');
+    }
+
+    /**
+     * Get the current revision for the page if existing.
+     *
+     * @return PageRevision|null
+     */
+    public function currentRevision(): HasOne
+    {
+        return $this->hasOne(PageRevision::class)
             ->where('type', '=', 'version')
             ->orderBy('created_at', 'desc')
             ->orderBy('id', 'desc');
@@ -115,16 +132,6 @@ class Page extends BookChild
         ];
 
         return url('/' . implode('/', $parts));
-    }
-
-    /**
-     * Get the current revision for the page if existing.
-     *
-     * @return PageRevision|null
-     */
-    public function getCurrentRevision()
-    {
-        return $this->revisions()->first();
     }
 
     /**

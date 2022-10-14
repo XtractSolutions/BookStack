@@ -3,8 +3,7 @@
 namespace BookStack\Entities\Tools;
 
 use BookStack\Entities\Models\Page;
-use BookStack\Entities\Tools\Markdown\CustomListItemRenderer;
-use BookStack\Entities\Tools\Markdown\CustomStrikeThroughExtension;
+use BookStack\Entities\Tools\Markdown\MarkdownToHtml;
 use BookStack\Exceptions\ImageUploadException;
 use BookStack\Facades\Theme;
 use BookStack\Theming\ThemeEvents;
@@ -17,15 +16,10 @@ use DOMNode;
 use DOMNodeList;
 use DOMXPath;
 use Illuminate\Support\Str;
-use League\CommonMark\Block\Element\ListItem;
-use League\CommonMark\CommonMarkConverter;
-use League\CommonMark\Environment;
-use League\CommonMark\Extension\Table\TableExtension;
-use League\CommonMark\Extension\TaskList\TaskListExtension;
 
 class PageContent
 {
-    protected $page;
+    protected Page $page;
 
     /**
      * PageContent constructor.
@@ -53,26 +47,9 @@ class PageContent
     {
         $markdown = $this->extractBase64ImagesFromMarkdown($markdown);
         $this->page->markdown = $markdown;
-        $html = $this->markdownToHtml($markdown);
+        $html = (new MarkdownToHtml($markdown))->convert();
         $this->page->html = $this->formatHtml($html);
         $this->page->text = $this->toPlainText();
-    }
-
-    /**
-     * Convert the given Markdown content to a HTML string.
-     */
-    protected function markdownToHtml(string $markdown): string
-    {
-        $environment = Environment::createCommonMarkEnvironment();
-        $environment->addExtension(new TableExtension());
-        $environment->addExtension(new TaskListExtension());
-        $environment->addExtension(new CustomStrikeThroughExtension());
-        $environment = Theme::dispatch(ThemeEvents::COMMONMARK_ENVIRONMENT_CONFIGURE, $environment) ?? $environment;
-        $converter = new CommonMarkConverter([], $environment);
-
-        $environment->addBlockRenderer(ListItem::class, new CustomListItemRenderer(), 10);
-
-        return $converter->convertToHtml($markdown);
     }
 
     /**
@@ -397,23 +374,30 @@ class PageContent
                 continue;
             }
 
-            // Find page and skip this if page not found
+            // Find page to use, and default replacement to empty string for non-matches.
             /** @var ?Page $matchedPage */
             $matchedPage = Page::visible()->find($pageId);
-            if ($matchedPage === null) {
-                $html = str_replace($fullMatch, '', $html);
-                continue;
+            $replacement = '';
+
+            if ($matchedPage && count($splitInclude) === 1) {
+                // If we only have page id, just insert all page html and continue.
+                $replacement = $matchedPage->html;
+            } elseif ($matchedPage && count($splitInclude) > 1) {
+                // Otherwise, if our include tag defines a section, load that specific content
+                $innerContent = $this->fetchSectionOfPage($matchedPage, $splitInclude[1]);
+                $replacement = trim($innerContent);
             }
 
-            // If we only have page id, just insert all page html and continue.
-            if (count($splitInclude) === 1) {
-                $html = str_replace($fullMatch, $matchedPage->html, $html);
-                continue;
-            }
+            $themeReplacement = Theme::dispatch(
+                ThemeEvents::PAGE_INCLUDE_PARSE,
+                $includeId,
+                $replacement,
+                clone $this->page,
+                $matchedPage ? (clone $matchedPage) : null,
+            );
 
-            // Create and load HTML into a document
-            $innerContent = $this->fetchSectionOfPage($matchedPage, $splitInclude[1]);
-            $html = str_replace($fullMatch, trim($innerContent), $html);
+            // Perform the content replacement
+            $html = str_replace($fullMatch, $themeReplacement ?? $replacement, $html);
         }
 
         return $html;

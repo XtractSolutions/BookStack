@@ -8,7 +8,7 @@ return [
     // Pages
     'page_create'                 => 'صفحه ایجاد شده',
     'page_create_notification'    => 'صفحه با موفقیت ایجاد شد',
-    'page_update'                 => 'صفحه بروز شده',
+    'page_update'                 => 'به روزرسانی صفحه',
     'page_update_notification'    => 'صفحه با موفقیت به روزرسانی شد',
     'page_delete'                 => 'حذف صفحه',
     'page_delete_notification'    => 'صفحه با موفقیت حذف شد',
@@ -28,6 +28,8 @@ return [
     // Books
     'book_create'                 => 'ایجاد کتاب',
     'book_create_notification'    => 'کتاب با موفقیت ایجاد شد',
+    'book_create_from_chapter'              => 'تبدیل فصل به کتاب',
+    'book_create_from_chapter_notification' => 'فصل با موفقیت به یک کتاب تبدیل شد',
     'book_update'                 => 'به روزرسانی کتاب',
     'book_update_notification'    => 'کتاب با موفقیت به روزرسانی شد',
     'book_delete'                 => 'حذف کتاب',
@@ -36,11 +38,13 @@ return [
     'book_sort_notification'      => 'کتاب با موفقیت مرتب سازی شد',
 
     // Bookshelves
-    'bookshelf_create'            => 'ایجاد قفسه کتاب',
+    'bookshelf_create'            => 'created shelf',
     'bookshelf_create_notification'    => 'قفسه کتاب با موفقیت ایجاد شد',
-    'bookshelf_update'                 => 'به روزرسانی قفسه کتاب',
-    'bookshelf_update_notification'    => 'قفسه کتاب با موفقیت به روزرسانی شد',
-    'bookshelf_delete'                 => 'حذف قفسه کتاب',
+    'bookshelf_create_from_book'    => 'converted book to shelf',
+    'bookshelf_create_from_book_notification'    => 'کتاب با موفقیت به یک قفسه تبدیل شد',
+    'bookshelf_update'                 => 'به روزرسانی قفسه',
+    'bookshelf_update_notification'    => 'قفسه با موفقیت به روزرسانی شد',
+    'bookshelf_delete'                 => 'قفسه حذف شده',
     'bookshelf_delete_notification'    => 'قفسه کتاب با موفقیت حذف شد',
 
     // Favourites
@@ -60,8 +64,8 @@ return [
     'webhook_delete_notification' => 'وب هوک با موفقیت حذف شد',
 
     // Users
-    'user_update_notification' => 'User successfully updated',
-    'user_delete_notification' => 'User successfully removed',
+    'user_update_notification' => 'کاربر با موفقیت به روز شد',
+    'user_delete_notification' => 'کاربر با موفقیت حذف شد',
 
     // Other
     'commented_on'                => 'ثبت دیدگاه',

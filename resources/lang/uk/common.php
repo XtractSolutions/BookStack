@@ -47,6 +47,8 @@ return [
     'previous' => 'Назад',
     'filter_active' => 'Активний фільтр:',
     'filter_clear' => 'Очистити фільтр',
+    'download' => 'Завантажити',
+    'open_in_tab' => 'Відкрити в новій вкладці',
 
     // Sort Options
     'sort_options' => 'Параметри сортування',
@@ -71,11 +73,11 @@ return [
     'list_view' => 'Вигляд Списком',
     'default' => 'За замовчуванням',
     'breadcrumb' => 'Навігація',
-    'status' => 'Status',
-    'status_active' => 'Active',
-    'status_inactive' => 'Inactive',
-    'never' => 'Never',
-    'none' => 'None',
+    'status' => 'Стан',
+    'status_active' => 'Активний',
+    'status_inactive' => 'Неактивний',
+    'never' => 'Ніколи',
+    'none' => 'Відсутньо',
 
     // Header
     'header_menu_expand' => 'Розгорнути меню заголовка',

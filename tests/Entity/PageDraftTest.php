@@ -31,27 +31,27 @@ class PageDraftTest extends TestCase
     {
         $addedContent = '<p>test message content</p>';
 
-        $this->asAdmin()->get($this->page->getUrl('/edit'))
-            ->assertElementNotContains('[name="html"]', $addedContent);
+        $resp = $this->asAdmin()->get($this->page->getUrl('/edit'));
+        $this->withHtml($resp)->assertElementNotContains('[name="html"]', $addedContent);
 
         $newContent = $this->page->html . $addedContent;
         $this->pageRepo->updatePageDraft($this->page, ['html' => $newContent]);
-        $this->asAdmin()->get($this->page->getUrl('/edit'))
-            ->assertElementContains('[name="html"]', $newContent);
+        $resp = $this->asAdmin()->get($this->page->getUrl('/edit'));
+        $this->withHtml($resp)->assertElementContains('[name="html"]', $newContent);
     }
 
     public function test_draft_not_visible_by_others()
     {
         $addedContent = '<p>test message content</p>';
-        $this->asAdmin()->get($this->page->getUrl('/edit'))
-            ->assertElementNotContains('[name="html"]', $addedContent);
+        $resp = $this->asAdmin()->get($this->page->getUrl('/edit'));
+        $this->withHtml($resp)->assertElementNotContains('[name="html"]', $addedContent);
 
         $newContent = $this->page->html . $addedContent;
         $newUser = $this->getEditor();
         $this->pageRepo->updatePageDraft($this->page, ['html' => $newContent]);
 
-        $this->actingAs($newUser)->get($this->page->getUrl('/edit'))
-            ->assertElementNotContains('[name="html"]', $newContent);
+        $resp = $this->actingAs($newUser)->get($this->page->getUrl('/edit'));
+        $this->withHtml($resp)->assertElementNotContains('[name="html"]', $newContent);
     }
 
     public function test_alert_message_shows_if_editing_draft()
@@ -66,8 +66,8 @@ class PageDraftTest extends TestCase
     {
         $nonEditedPage = Page::query()->take(10)->get()->last();
         $addedContent = '<p>test message content</p>';
-        $this->asAdmin()->get($this->page->getUrl('/edit'))
-            ->assertElementNotContains('[name="html"]', $addedContent);
+        $resp = $this->asAdmin()->get($this->page->getUrl('/edit'));
+        $this->withHtml($resp)->assertElementNotContains('[name="html"]', $addedContent);
 
         $newContent = $this->page->html . $addedContent;
         $newUser = $this->getEditor();
@@ -77,8 +77,8 @@ class PageDraftTest extends TestCase
             ->get($this->page->getUrl('/edit'))
             ->assertSee('Admin has started editing this page');
         $this->flushSession();
-        $this->get($nonEditedPage->getUrl() . '/edit')
-            ->assertElementNotContains('.notification', 'Admin has started editing this page');
+        $resp = $this->get($nonEditedPage->getUrl() . '/edit');
+        $this->withHtml($resp)->assertElementNotContains('.notification', 'Admin has started editing this page');
     }
 
     public function test_draft_save_shows_alert_if_draft_older_than_last_page_update()
@@ -142,12 +142,12 @@ class PageDraftTest extends TestCase
     {
         /** @var Book $book */
         $book = Book::query()->first();
-        $this->asAdmin()->get('/')
-            ->assertElementNotContains('#recent-drafts', 'New Page');
+        $resp = $this->asAdmin()->get('/');
+        $this->withHtml($resp)->assertElementNotContains('#recent-drafts', 'New Page');
 
         $this->get($book->getUrl() . '/create-page');
 
-        $this->get('/')->assertElementContains('#recent-drafts', 'New Page');
+        $this->withHtml($this->get('/'))->assertElementContains('#recent-drafts', 'New Page');
     }
 
     public function test_draft_pages_not_visible_by_others()
@@ -159,13 +159,13 @@ class PageDraftTest extends TestCase
 
         $this->actingAs($newUser)->get($book->getUrl('/create-page'));
         $this->get($chapter->getUrl('/create-page'));
-        $this->get($book->getUrl())
-            ->assertElementContains('.book-contents', 'New Page');
+        $resp = $this->get($book->getUrl());
+        $this->withHtml($resp)->assertElementContains('.book-contents', 'New Page');
 
-        $this->asAdmin()->get($book->getUrl())
-            ->assertElementNotContains('.book-contents', 'New Page');
-        $this->get($chapter->getUrl())
-            ->assertElementNotContains('.book-contents', 'New Page');
+        $resp = $this->asAdmin()->get($book->getUrl());
+        $this->withHtml($resp)->assertElementNotContains('.book-contents', 'New Page');
+        $resp = $this->get($chapter->getUrl());
+        $this->withHtml($resp)->assertElementNotContains('.book-contents', 'New Page');
     }
 
     public function test_page_html_in_ajax_fetch_response()
@@ -203,5 +203,33 @@ class PageDraftTest extends TestCase
 
         $draft->refresh();
         $this->assertStringContainsString('href="https://example.com"', $draft->html);
+    }
+
+    public function test_slug_generated_on_draft_publish_to_page_when_no_name_change()
+    {
+        /** @var Book $book */
+        $book = Book::query()->first();
+        $this->asEditor()->get($book->getUrl('/create-page'));
+        /** @var Page $draft */
+        $draft = Page::query()->where('draft', '=', true)->where('book_id', '=', $book->id)->firstOrFail();
+
+        $this->put('/ajax/page/' . $draft->id . '/save-draft', [
+            'name'     => 'My page',
+            'markdown' => 'Update test',
+        ])->assertOk();
+
+        $draft->refresh();
+        $this->assertEmpty($draft->slug);
+
+        $this->post($draft->getUrl(), [
+            'name'     => 'My page',
+            'markdown' => '# My markdown page',
+        ]);
+
+        $this->assertDatabaseHas('pages', [
+            'id'    => $draft->id,
+            'draft' => false,
+            'slug'  => 'my-page',
+        ]);
     }
 }

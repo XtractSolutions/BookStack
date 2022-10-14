@@ -3,6 +3,7 @@
 namespace Tests;
 
 use BookStack\Util\CspService;
+use Illuminate\Testing\TestResponse;
 
 class SecurityHeaderTest extends TestCase
 {
@@ -130,7 +131,7 @@ class SecurityHeaderTest extends TestCase
     {
         config()->set([
             'app.iframe_sources' => 'https://example.com',
-            'services.drawio'   => 'https://diagrams.example.com/testing?cat=dog',
+            'services.drawio'    => 'https://diagrams.example.com/testing?cat=dog',
         ]);
 
         $resp = $this->get('/');

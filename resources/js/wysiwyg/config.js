@@ -2,6 +2,7 @@ import {register as registerShortcuts} from "./shortcuts";
 import {listen as listenForCommonEvents} from "./common-events";
 import {scrollToQueryString} from "./scrolling";
 import {listenForDragAndPaste} from "./drop-paste-handling";
+import {getPrimaryToolbar, registerAdditionalToolbars} from "./toolbars";
 
 import {getPlugin as getCodeeditorPlugin} from "./plugin-codeeditor";
 import {getPlugin as getDrawioPlugin} from "./plugin-drawio";
@@ -9,6 +10,7 @@ import {getPlugin as getCustomhrPlugin} from "./plugins-customhr";
 import {getPlugin as getImagemanagerPlugin} from "./plugins-imagemanager";
 import {getPlugin as getAboutPlugin} from "./plugins-about";
 import {getPlugin as getDetailsPlugin} from "./plugins-details";
+import {getPlugin as getTasklistPlugin} from "./plugins-tasklist";
 
 const style_formats = [
     {title: "Large Header", format: "h2", preview: 'color: blue;'},
@@ -37,6 +39,35 @@ const formats = {
     calloutdanger: {block: 'p', exact: true, attributes: {class: 'callout danger'}}
 };
 
+const color_map = [
+    '#BFEDD2', '',
+    '#FBEEB8', '',
+    '#F8CAC6', '',
+    '#ECCAFA', '',
+    '#C2E0F4', '',
+
+    '#2DC26B', '',
+    '#F1C40F', '',
+    '#E03E2D', '',
+    '#B96AD9', '',
+    '#3598DB', '',
+
+    '#169179', '',
+    '#E67E23', '',
+    '#BA372A', '',
+    '#843FA1', '',
+    '#236FA1', '',
+
+    '#ECF0F1', '',
+    '#CED4D9', '',
+    '#95A5A6', '',
+    '#7E8C8D', '',
+    '#34495E', '',
+
+    '#000000', '',
+    '#ffffff', ''
+];
+
 function file_picker_callback(callback, value, meta) {
 
     // field_name, url, type, win
@@ -60,56 +91,12 @@ function file_picker_callback(callback, value, meta) {
 
 /**
  * @param {WysiwygConfigOptions} options
- * @return {{toolbar: string, groupButtons: Object<string, Object>}}
- */
-function buildToolbar(options) {
-    const textDirPlugins = options.textDirection === 'rtl' ? 'ltr rtl' : '';
-
-    const groupButtons = {
-        formatoverflow: {
-            icon: 'more-drawer',
-            tooltip: 'More',
-            items: 'strikethrough superscript subscript inlinecode removeformat'
-        },
-        listoverflow: {
-            icon: 'more-drawer',
-            tooltip: 'More',
-            items: 'outdent indent'
-        },
-        insertoverflow: {
-            icon: 'more-drawer',
-            tooltip: 'More',
-            items: 'hr codeeditor drawio media details'
-        }
-    };
-
-    const toolbar = [
-        'undo redo',
-        'styleselect',
-        'bold italic underline forecolor backcolor formatoverflow',
-        'alignleft aligncenter alignright alignjustify',
-        'bullist numlist listoverflow',
-        textDirPlugins,
-        'link table imagemanager-insert insertoverflow',
-        'code about fullscreen'
-    ];
-
-    return {
-        toolbar: toolbar.filter(row => Boolean(row)).join(' | '),
-        groupButtons,
-    };
-}
-
-/**
- * @param {WysiwygConfigOptions} options
- * @return {string}
+ * @return {string[]}
  */
 function gatherPlugins(options) {
     const plugins = [
         "image",
-        "imagetools",
         "table",
-        "paste",
         "link",
         "autolink",
         "fullscreen",
@@ -122,6 +109,7 @@ function gatherPlugins(options) {
         "imagemanager",
         "about",
         "details",
+        "tasklist",
         options.textDirection === 'rtl' ? 'directionality' : '',
     ];
 
@@ -130,13 +118,14 @@ function gatherPlugins(options) {
     window.tinymce.PluginManager.add('imagemanager', getImagemanagerPlugin(options));
     window.tinymce.PluginManager.add('about', getAboutPlugin(options));
     window.tinymce.PluginManager.add('details', getDetailsPlugin(options));
+    window.tinymce.PluginManager.add('tasklist', getTasklistPlugin(options));
 
     if (options.drawioUrl) {
         window.tinymce.PluginManager.add('drawio', getDrawioPlugin(options));
         plugins.push('drawio');
     }
 
-    return plugins.filter(plugin => Boolean(plugin)).join(' ');
+    return plugins.filter(plugin => Boolean(plugin));
 }
 
 /**
@@ -153,6 +142,23 @@ function fetchCustomHeadContent() {
 }
 
 /**
+ * Setup a serializer filter for <br> tags to ensure they're not rendered
+ * within code blocks and that we use newlines there instead.
+ * @param {Editor} editor
+ */
+function setupBrFilter(editor) {
+    editor.serializer.addNodeFilter('br', function(nodes) {
+        for (const node of nodes) {
+            if (node.parent && node.parent.name === 'code') {
+                const newline = tinymce.html.Node.create('#text');
+                newline.value = '\n';
+                node.replace(newline);
+            }
+        }
+    });
+}
+
+/**
  * @param {WysiwygConfigOptions} options
  * @return {function(Editor)}
  */
@@ -160,13 +166,17 @@ function getSetupCallback(options) {
     return function(editor) {
         editor.on('ExecCommand change input NodeChange ObjectResized', editorChange);
         listenForCommonEvents(editor);
-        registerShortcuts(editor);
         listenForDragAndPaste(editor, options);
 
         editor.on('init', () => {
             editorChange();
             scrollToQueryString(editor);
             window.editor = editor;
+            registerShortcuts(editor);
+        });
+
+        editor.on('PreInit', () => {
+            setupBrFilter(editor);
         });
 
         function editorChange() {
@@ -218,8 +228,6 @@ export function build(options) {
 
     // Set language
     window.tinymce.addI18n(options.language, options.translationMap);
-    // Build toolbar content
-    const {toolbar, groupButtons: toolBarGroupButtons} = buildToolbar(options);
 
     // BookStack Version
     const version = document.querySelector('script[src*="/dist/app.js"]').getAttribute('src').split('?version=')[1];
@@ -234,7 +242,7 @@ export function build(options) {
             window.baseUrl('/dist/styles.css'),
         ],
         branding: false,
-        skin: options.darkMode ? 'oxide-dark' : 'oxide',
+        skin: options.darkMode ? 'tinymce-5-dark' : 'tinymce-5',
         body_class: 'page-content',
         browser_spellcheck: true,
         relative_urls: false,
@@ -247,7 +255,7 @@ export function build(options) {
         statusbar: false,
         menubar: false,
         paste_data_images: false,
-        extended_valid_elements: 'pre[*],svg[*],div[drawio-diagram],details[*],summary[*],div[*]',
+        extended_valid_elements: 'pre[*],svg[*],div[drawio-diagram],details[*],summary[*],div[*],li[class|checked]',
         automatic_uploads: false,
         custom_elements: 'doc-root,code-block',
         valid_children: [
@@ -256,19 +264,21 @@ export function build(options) {
             "-doc-root[doc-root|#text]",
             "-li[details]",
             "+code-block[pre]",
-            "+doc-root[code-block]"
+            "+doc-root[p|h1|h2|h3|h4|h5|h6|blockquote|code-block|div]"
         ].join(','),
         plugins: gatherPlugins(options),
-        imagetools_toolbar: 'imageoptions',
         contextmenu: false,
-        toolbar: toolbar,
+        toolbar: getPrimaryToolbar(options),
         content_style: getContentStyle(options),
         style_formats,
         style_formats_merge: false,
         media_alt_source: false,
         media_poster: false,
         formats,
+        table_style_by_css: true,
+        table_use_colgroups: true,
         file_picker_types: 'file image',
+        color_map,
         file_picker_callback,
         paste_preprocess(plugin, args) {
             const content = args.content;
@@ -281,9 +291,7 @@ export function build(options) {
             head.innerHTML += fetchCustomHeadContent();
         },
         setup(editor) {
-            for (const [key, config] of Object.entries(toolBarGroupButtons)) {
-                editor.ui.registry.addGroupToolbarButton(key, config);
-            }
+            registerAdditionalToolbars(editor, options);
             getSetupCallback(options)(editor);
         },
     };

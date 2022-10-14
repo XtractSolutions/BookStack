@@ -6,12 +6,10 @@ use BookStack\Actions\ActivityType;
 use BookStack\Entities\Models\Book;
 use BookStack\Entities\Models\Bookshelf;
 use BookStack\Entities\Tools\TrashCan;
-use BookStack\Exceptions\ImageUploadException;
 use BookStack\Exceptions\NotFoundException;
 use BookStack\Facades\Activity;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 
 class BookshelfRepo
@@ -89,6 +87,7 @@ class BookshelfRepo
     {
         $shelf = new Bookshelf();
         $this->baseRepo->create($shelf, $input);
+        $this->baseRepo->updateCoverImage($shelf, $input['image'] ?? null);
         $this->updateBooks($shelf, $bookIds);
         Activity::add(ActivityType::BOOKSHELF_CREATE, $shelf);
 
@@ -106,14 +105,17 @@ class BookshelfRepo
             $this->updateBooks($shelf, $bookIds);
         }
 
+        if (array_key_exists('image', $input)) {
+            $this->baseRepo->updateCoverImage($shelf, $input['image'], $input['image'] === null);
+        }
+
         Activity::add(ActivityType::BOOKSHELF_UPDATE, $shelf);
 
         return $shelf;
     }
 
     /**
-     * Update which books are assigned to this shelf by
-     * syncing the given book ids.
+     * Update which books are assigned to this shelf by syncing the given book ids.
      * Function ensures the books are visible to the current user and existing.
      */
     protected function updateBooks(Bookshelf $shelf, array $bookIds)
@@ -133,23 +135,12 @@ class BookshelfRepo
     }
 
     /**
-     * Update the given shelf cover image, or clear it.
-     *
-     * @throws ImageUploadException
-     * @throws Exception
-     */
-    public function updateCoverImage(Bookshelf $shelf, ?UploadedFile $coverImage, bool $removeImage = false)
-    {
-        $this->baseRepo->updateCoverImage($shelf, $coverImage, $removeImage);
-    }
-
-    /**
      * Copy down the permissions of the given shelf to all child books.
      */
     public function copyDownPermissions(Bookshelf $shelf, $checkUserPermissions = true): int
     {
         $shelfPermissions = $shelf->permissions()->get(['role_id', 'action'])->toArray();
-        $shelfBooks = $shelf->books()->get(['id', 'restricted']);
+        $shelfBooks = $shelf->books()->get(['id', 'restricted', 'owned_by']);
         $updatedBookCount = 0;
 
         /** @var Book $book */

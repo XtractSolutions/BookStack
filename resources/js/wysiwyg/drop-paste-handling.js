@@ -60,13 +60,7 @@ async function uploadImageFile(file, pageId) {
         throw new Error(`Not an image file`);
     }
 
-    let ext = 'png';
-    if (file.name) {
-        let fileNameMatches = file.name.match(/\.(.+)$/);
-        if (fileNameMatches.length > 1) ext = fileNameMatches[1];
-    }
-
-    const remoteFilename = "image-" + Date.now() + "." + ext;
+    const remoteFilename = file.name || `image-${Date.now()}.png`;
     const formData = new FormData();
     formData.append('file', file, remoteFilename);
     formData.append('uploaded_to', pageId);
@@ -138,9 +132,9 @@ function drop(editor, options, event) {
             const range = editor.selection.getRng();
             const selectedNodeRoot = selectedNode.closest('body > *');
             if (range.startOffset > (range.startContainer.length / 2)) {
-                editor.$(selectedNodeRoot).after(draggedContentEditable);
+                selectedNodeRoot.after(draggedContentEditable);
             } else {
-                editor.$(selectedNodeRoot).before(draggedContentEditable);
+                selectedNodeRoot.before(draggedContentEditable);
             }
         });
     }

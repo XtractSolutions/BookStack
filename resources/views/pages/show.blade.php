@@ -4,6 +4,8 @@
     <meta property="og:description" content="{{ Str::limit($page->text, 100, '...') }}">
 @endpush
 
+@include('entities.body-tag-classes', ['entity' => $page])
+
 @section('body')
 
     <div class="mb-m print-hidden">
@@ -76,15 +78,21 @@
 @section('right')
     <div id="page-details" class="entity-details mb-xl">
         <h5>{{ trans('common.details') }}</h5>
-        <div class="body text-small blended-links">
+        <div class="blended-links">
             @include('entities.meta', ['entity' => $page])
 
             @if($book->restricted)
                 <div class="active-restriction">
                     @if(userCan('restrictions-manage', $book))
-                        <a href="{{ $book->getUrl('/permissions') }}">@icon('lock'){{ trans('entities.books_permissions_active') }}</a>
+                        <a href="{{ $book->getUrl('/permissions') }}" class="entity-meta-item">
+                            @icon('lock')
+                            <div>{{ trans('entities.books_permissions_active') }}</div>
+                        </a>
                     @else
-                        @icon('lock'){{ trans('entities.books_permissions_active') }}
+                        <div class="entity-meta-item">
+                            @icon('lock')
+                            <div>{{ trans('entities.books_permissions_active') }}</div>
+                        </div>
                     @endif
                 </div>
             @endif
@@ -92,9 +100,15 @@
             @if($page->chapter && $page->chapter->restricted)
                 <div class="active-restriction">
                     @if(userCan('restrictions-manage', $page->chapter))
-                        <a href="{{ $page->chapter->getUrl('/permissions') }}">@icon('lock'){{ trans('entities.chapters_permissions_active') }}</a>
+                        <a href="{{ $page->chapter->getUrl('/permissions') }}" class="entity-meta-item">
+                            @icon('lock')
+                            <div>{{ trans('entities.chapters_permissions_active') }}</div>
+                        </a>
                     @else
-                        @icon('lock'){{ trans('entities.chapters_permissions_active') }}
+                        <div class="entity-meta-item">
+                            @icon('lock')
+                            <div>{{ trans('entities.chapters_permissions_active') }}</div>
+                        </div>
                     @endif
                 </div>
             @endif
@@ -102,16 +116,23 @@
             @if($page->restricted)
                 <div class="active-restriction">
                     @if(userCan('restrictions-manage', $page))
-                        <a href="{{ $page->getUrl('/permissions') }}">@icon('lock'){{ trans('entities.pages_permissions_active') }}</a>
+                        <a href="{{ $page->getUrl('/permissions') }}" class="entity-meta-item">
+                            @icon('lock')
+                            <div>{{ trans('entities.pages_permissions_active') }}</div>
+                        </a>
                     @else
-                        @icon('lock'){{ trans('entities.pages_permissions_active') }}
+                        <div class="entity-meta-item">
+                            @icon('lock')
+                            <div>{{ trans('entities.pages_permissions_active') }}</div>
+                        </div>
                     @endif
                 </div>
             @endif
 
             @if($page->template)
-                <div>
-                    @icon('template'){{ trans('entities.pages_is_template') }}
+                <div class="entity-meta-item">
+                    @icon('template')
+                    <div>{{ trans('entities.pages_is_template') }}</div>
                 </div>
             @endif
         </div>
@@ -129,7 +150,7 @@
                     <span>{{ trans('common.edit') }}</span>
                 </a>
             @endif
-            @if(userCanOnAny('page-create'))
+            @if(userCanOnAny('create', \BookStack\Entities\Models\Book::class) || userCanOnAny('create', \BookStack\Entities\Models\Chapter::class) || userCan('page-create-all') || userCan('page-create-own'))
                 <a href="{{ $page->getUrl('/copy') }}" class="icon-list-item">
                     <span>@icon('copy')</span>
                     <span>{{ trans('common.copy') }}</span>
@@ -142,11 +163,11 @@
 	                    <span>{{ trans('common.move') }}</span>
 	                </a>
                 @endif
-                <a href="{{ $page->getUrl('/revisions') }}" class="icon-list-item">
-                    <span>@icon('history')</span>
-                    <span>{{ trans('entities.revisions') }}</span>
-                </a>
             @endif
+            <a href="{{ $page->getUrl('/revisions') }}" class="icon-list-item">
+                <span>@icon('history')</span>
+                <span>{{ trans('entities.revisions') }}</span>
+            </a>
             @if(userCan('restrictions-manage', $page))
                 <a href="{{ $page->getUrl('/permissions') }}" class="icon-list-item">
                     <span>@icon('lock')</span>

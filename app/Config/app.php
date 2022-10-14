@@ -21,7 +21,7 @@ return [
     // The number of revisions to keep in the database.
     // Once this limit is reached older revisions will be deleted.
     // If set to false then a limit will not be enforced.
-    'revision_limit' => env('REVISION_LIMIT', 50),
+    'revision_limit' => env('REVISION_LIMIT', 100),
 
     // The number of days that content will remain in the recycle bin before
     // being considered for auto-removal. It is not a guarantee that content will
@@ -63,6 +63,10 @@ return [
     // Current host and source for the "DRAWIO" setting will be auto-appended to the sources configured.
     'iframe_sources' => env('ALLOWED_IFRAME_SOURCES', 'https://*.draw.io https://*.youtube.com https://*.youtube-nocookie.com https://*.vimeo.com'),
 
+    // Alter the precision of IP addresses stored by BookStack.
+    // Integer value between 0 (IP hidden) to 4 (Full IP usage)
+    'ip_address_precision' => env('IP_ADDRESS_PRECISION', 4),
+
     // Application timezone for back-end date functions.
     'timezone' => env('APP_TIMEZONE', 'UTC'),
 
@@ -70,7 +74,7 @@ return [
     'locale' => env('APP_LANG', 'en'),
 
     // Locales available
-    'locales' => ['en', 'ar', 'bg', 'bs', 'ca', 'cs', 'da', 'de', 'de_informal', 'es', 'es_AR', 'et', 'fa', 'fr', 'he', 'hr', 'hu', 'id', 'it', 'ja', 'ko', 'lt', 'lv', 'nl', 'nb', 'pt', 'pt_BR', 'sk', 'sl', 'sv', 'pl',  'ru', 'th', 'tr', 'uk', 'vi', 'zh_CN', 'zh_TW'],
+    'locales' => ['en', 'ar', 'bg', 'bs', 'ca', 'cs', 'cy', 'da', 'de', 'de_informal', 'es', 'es_AR', 'et', 'eu', 'fa', 'fr', 'he', 'hr', 'hu', 'id', 'it', 'ja', 'ko', 'lt', 'lv', 'nl', 'nb', 'pt', 'pt_BR', 'sk', 'sl', 'sv', 'pl',  'ro', 'ru', 'tr', 'uk', 'uz', 'vi', 'zh_CN', 'zh_TW'],
 
     //  Application Fallback Locale
     'fallback_locale' => 'en',
@@ -196,12 +200,9 @@ return [
 
         // Third Party
         'ImageTool' => Intervention\Image\Facades\Image::class,
-        'DomPDF'    => Barryvdh\DomPDF\Facade::class,
-        'SnappyPDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
 
         // Custom BookStack
         'Activity'    => BookStack\Facades\Activity::class,
-        'Permissions' => BookStack\Facades\Permissions::class,
         'Theme'       => BookStack\Facades\Theme::class,
     ],
 

@@ -28,6 +28,8 @@ return [
     // Books
     'book_create'                 => 'a créé un livre',
     'book_create_notification'    => 'Livre créé avec succès',
+    'book_create_from_chapter'              => 'chapitre converti en livre',
+    'book_create_from_chapter_notification' => 'Chapitre converti en livre avec succès',
     'book_update'                 => 'a modifié le livre',
     'book_update_notification'    => 'Livre modifié avec succès',
     'book_delete'                 => 'a supprimé un livre',
@@ -38,9 +40,11 @@ return [
     // Bookshelves
     'bookshelf_create'            => 'a créé l\'étagère',
     'bookshelf_create_notification'    => 'Étagère créée avec succès',
-    'bookshelf_update'                 => 'a modifié l\'étagère',
-    'bookshelf_update_notification'    => 'Étagère modifiée avec succès',
-    'bookshelf_delete'                 => 'a supprimé l\'étagère',
+    'bookshelf_create_from_book'    => 'livre converti en étagère',
+    'bookshelf_create_from_book_notification'    => 'Livre converti en étagère avec succès',
+    'bookshelf_update'                 => 'étagère mise à jour',
+    'bookshelf_update_notification'    => 'Étagère mise à jour avec succès',
+    'bookshelf_delete'                 => 'étagère supprimée',
     'bookshelf_delete_notification'    => 'Étagère supprimée avec succès',
 
     // Favourites

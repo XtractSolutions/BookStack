@@ -38,6 +38,11 @@ return [
     'registration_email_domain_invalid' => '이 메일 주소로는 이 사이트에 접근할 수 없습니다.',
     'register_success' => '가입했습니다! 이제 로그인할 수 있습니다.',
 
+    // Login auto-initiation
+    'auto_init_starting' => '로그인 시도 중',
+    'auto_init_starting_desc' => '로그인을 시작하기 위해 인증 시스템에 접근 중입니다. 5초 후에도 아무런 반응이 없다면 아래 링크를 클릭하세요.',
+    'auto_init_start_link' => '인증 진행',
+
     // Password Reset
     'reset_password' => '패스워드 바꾸기',
     'reset_password_send_instructions' => '메일 주소를 입력하세요. 이 주소로 해당 과정을 위한 링크를 보낼 것입니다.',

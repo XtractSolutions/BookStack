@@ -51,7 +51,7 @@ class EntityPermissionsTest extends TestCase
         $this->setRestrictionsForTestRoles($shelf, []);
 
         $this->followingRedirects()->get($shelf->getUrl())
-            ->assertSee('Bookshelf not found');
+            ->assertSee('Shelf not found');
 
         $this->setRestrictionsForTestRoles($shelf, ['view']);
 
@@ -66,7 +66,7 @@ class EntityPermissionsTest extends TestCase
 
         $this->actingAs($this->user)
             ->get($shelf->getUrl('/edit'))
-            ->assertSee('Edit Book');
+            ->assertSee('Edit Shelf');
 
         $this->setRestrictionsForTestRoles($shelf, ['view', 'delete']);
 
@@ -87,7 +87,7 @@ class EntityPermissionsTest extends TestCase
 
         $this->actingAs($this->user)
             ->get($shelf->getUrl('/delete'))
-            ->assertSee('Delete Book');
+            ->assertSee('Delete Shelf');
 
         $this->setRestrictionsForTestRoles($shelf, ['view', 'update']);
 
@@ -98,7 +98,7 @@ class EntityPermissionsTest extends TestCase
 
         $this->get($shelf->getUrl('/delete'))
             ->assertOk()
-            ->assertSee('Delete Book');
+            ->assertSee('Delete Shelf');
     }
 
     public function test_book_view_restriction()
@@ -138,13 +138,11 @@ class EntityPermissionsTest extends TestCase
         $book = Book::query()->first();
 
         $bookUrl = $book->getUrl();
-        $this->actingAs($this->viewer)
-            ->get($bookUrl)
-            ->assertElementNotContains('.actions', 'New Page')
+        $resp = $this->actingAs($this->viewer)->get($bookUrl);
+        $this->withHtml($resp)->assertElementNotContains('.actions', 'New Page')
             ->assertElementNotContains('.actions', 'New Chapter');
-        $this->actingAs($this->user)
-            ->get($bookUrl)
-            ->assertElementContains('.actions', 'New Page')
+        $resp = $this->actingAs($this->user)->get($bookUrl);
+        $this->withHtml($resp)->assertElementContains('.actions', 'New Page')
             ->assertElementContains('.actions', 'New Chapter');
 
         $this->setRestrictionsForTestRoles($book, ['view', 'delete', 'update']);
@@ -155,8 +153,8 @@ class EntityPermissionsTest extends TestCase
         $this->get($bookUrl . '/create-page')->assertRedirect('/');
         $this->get('/')->assertSee('You do not have permission');
 
-        $this->get($bookUrl)
-            ->assertElementNotContains('.actions', 'New Page')
+        $resp = $this->get($bookUrl);
+        $this->withHtml($resp)->assertElementNotContains('.actions', 'New Page')
             ->assertElementNotContains('.actions', 'New Chapter');
 
         $this->setRestrictionsForTestRoles($book, ['view', 'create']);
@@ -176,8 +174,8 @@ class EntityPermissionsTest extends TestCase
         ]);
         $resp->assertRedirect($book->getUrl('/page/test-page'));
 
-        $this->get($bookUrl)
-            ->assertElementContains('.actions', 'New Page')
+        $resp = $this->get($bookUrl);
+        $this->withHtml($resp)->assertElementContains('.actions', 'New Page')
             ->assertElementContains('.actions', 'New Chapter');
     }
 
@@ -262,15 +260,14 @@ class EntityPermissionsTest extends TestCase
         $chapter = Chapter::query()->first();
 
         $chapterUrl = $chapter->getUrl();
-        $this->actingAs($this->user)
-            ->get($chapterUrl)
-            ->assertElementContains('.actions', 'New Page');
+        $resp = $this->actingAs($this->user)->get($chapterUrl);
+        $this->withHtml($resp)->assertElementContains('.actions', 'New Page');
 
         $this->setRestrictionsForTestRoles($chapter, ['view', 'delete', 'update']);
 
         $this->get($chapterUrl . '/create-page')->assertRedirect('/');
         $this->get('/')->assertSee('You do not have permission');
-        $this->get($chapterUrl)->assertElementNotContains('.actions', 'New Page');
+        $this->withHtml($this->get($chapterUrl))->assertElementNotContains('.actions', 'New Page');
 
         $this->setRestrictionsForTestRoles($chapter, ['view', 'create']);
 
@@ -283,7 +280,7 @@ class EntityPermissionsTest extends TestCase
         ]);
         $resp->assertRedirect($chapter->book->getUrl('/page/test-page'));
 
-        $this->get($chapterUrl)->assertElementContains('.actions', 'New Page');
+        $this->withHtml($this->get($chapterUrl))->assertElementContains('.actions', 'New Page');
     }
 
     public function test_chapter_update_restriction()
@@ -356,9 +353,9 @@ class EntityPermissionsTest extends TestCase
         $page = Page::query()->first();
 
         $pageUrl = $page->getUrl();
-        $this->actingAs($this->user)
-            ->get($pageUrl . '/edit')
-            ->assertElementExists('input[name="name"][value="' . $page->name . '"]');
+        $resp = $this->actingAs($this->user)
+            ->get($pageUrl . '/edit');
+        $this->withHtml($resp)->assertElementExists('input[name="name"][value="' . $page->name . '"]');
 
         $this->setRestrictionsForTestRoles($page, ['view', 'delete']);
 
@@ -367,9 +364,9 @@ class EntityPermissionsTest extends TestCase
 
         $this->setRestrictionsForTestRoles($page, ['view', 'update']);
 
-        $this->get($pageUrl . '/edit')
-            ->assertOk()
-            ->assertElementExists('input[name="name"][value="' . $page->name . '"]');
+        $resp = $this->get($pageUrl . '/edit')
+            ->assertOk();
+        $this->withHtml($resp)->assertElementExists('input[name="name"][value="' . $page->name . '"]');
     }
 
     public function test_page_delete_restriction()
@@ -419,7 +416,7 @@ class EntityPermissionsTest extends TestCase
 
     public function test_bookshelf_restriction_form()
     {
-        $this->entityRestrictionFormTest(Bookshelf::class, 'Bookshelf Permissions', 'view', '2');
+        $this->entityRestrictionFormTest(Bookshelf::class, 'Shelf Permissions', 'view', '2');
     }
 
     public function test_book_restriction_form()
@@ -446,9 +443,8 @@ class EntityPermissionsTest extends TestCase
 
         $this->setRestrictionsForTestRoles($page, []);
 
-        $this->actingAs($this->user)
-            ->get($page2->getUrl())
-            ->assertElementNotContains('.sidebar-page-list', $page->name);
+        $resp = $this->actingAs($this->user)->get($page2->getUrl());
+        $this->withHtml($resp)->assertElementNotContains('.sidebar-page-list', $page->name);
     }
 
     public function test_restricted_pages_not_visible_in_book_navigation_on_chapters()
@@ -459,9 +455,8 @@ class EntityPermissionsTest extends TestCase
 
         $this->setRestrictionsForTestRoles($page, []);
 
-        $this->actingAs($this->user)
-            ->get($chapter->getUrl())
-            ->assertElementNotContains('.sidebar-page-list', $page->name);
+        $resp = $this->actingAs($this->user)->get($chapter->getUrl());
+        $this->withHtml($resp)->assertElementNotContains('.sidebar-page-list', $page->name);
     }
 
     public function test_restricted_pages_not_visible_on_chapter_pages()
@@ -529,7 +524,7 @@ class EntityPermissionsTest extends TestCase
 
         $this->setRestrictionsForTestRoles($shelf, ['view', 'delete']);
 
-        $this->get($shelf->getUrl('/delete'))->assertOk()->assertSee('Delete Book');
+        $this->get($shelf->getUrl('/delete'))->assertOk()->assertSee('Delete Shelf');
     }
 
     public function test_book_create_restriction_override()
@@ -538,9 +533,8 @@ class EntityPermissionsTest extends TestCase
         $book = Book::query()->first();
 
         $bookUrl = $book->getUrl();
-        $this->actingAs($this->viewer)
-            ->get($bookUrl)
-            ->assertElementNotContains('.actions', 'New Page')
+        $resp = $this->actingAs($this->viewer)->get($bookUrl);
+        $this->withHtml($resp)->assertElementNotContains('.actions', 'New Page')
             ->assertElementNotContains('.actions', 'New Chapter');
 
         $this->setRestrictionsForTestRoles($book, ['view', 'delete', 'update']);
@@ -549,7 +543,8 @@ class EntityPermissionsTest extends TestCase
         $this->get('/')->assertSee('You do not have permission');
         $this->get($bookUrl . '/create-page')->assertRedirect('/');
         $this->get('/')->assertSee('You do not have permission');
-        $this->get($bookUrl)->assertElementNotContains('.actions', 'New Page')
+        $resp = $this->get($bookUrl);
+        $this->withHtml($resp)->assertElementNotContains('.actions', 'New Page')
             ->assertElementNotContains('.actions', 'New Chapter');
 
         $this->setRestrictionsForTestRoles($book, ['view', 'create']);
@@ -569,8 +564,8 @@ class EntityPermissionsTest extends TestCase
         ]);
         $resp->assertRedirect($book->getUrl('/page/test-page'));
 
-        $this->get($bookUrl)
-            ->assertElementContains('.actions', 'New Page')
+        $resp = $this->get($bookUrl);
+        $this->withHtml($resp)->assertElementContains('.actions', 'New Page')
             ->assertElementContains('.actions', 'New Chapter');
     }
 

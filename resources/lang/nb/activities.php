@@ -7,42 +7,46 @@ return [
 
     // Pages
     'page_create'                 => 'opprettet side',
-    'page_create_notification'    => 'Page successfully created',
+    'page_create_notification'    => 'Siden ble opprettet',
     'page_update'                 => 'oppdaterte side',
-    'page_update_notification'    => 'Page successfully updated',
+    'page_update_notification'    => 'Siden ble oppdatert',
     'page_delete'                 => 'slettet side',
-    'page_delete_notification'    => 'Page successfully deleted',
+    'page_delete_notification'    => 'Siden ble slettet',
     'page_restore'                => 'gjenopprettet side',
-    'page_restore_notification'   => 'Page successfully restored',
+    'page_restore_notification'   => 'Siden ble gjenopprettet',
     'page_move'                   => 'flyttet side',
 
     // Chapters
     'chapter_create'              => 'opprettet kapittel',
-    'chapter_create_notification' => 'Chapter successfully created',
+    'chapter_create_notification' => 'Kapittelet ble opprettet',
     'chapter_update'              => 'oppdaterte kapittel',
-    'chapter_update_notification' => 'Chapter successfully updated',
+    'chapter_update_notification' => 'Kapittelet ble oppdatert',
     'chapter_delete'              => 'slettet kapittel',
-    'chapter_delete_notification' => 'Chapter successfully deleted',
+    'chapter_delete_notification' => 'Kapittelet ble slettet',
     'chapter_move'                => 'flyttet kapittel
     ',
 
     // Books
     'book_create'                 => 'opprettet bok',
-    'book_create_notification'    => 'Book successfully created',
+    'book_create_notification'    => 'Boken ble opprettet',
+    'book_create_from_chapter'              => 'konverterte kapittelet til bok',
+    'book_create_from_chapter_notification' => 'Kapittelet ble konvertert til en bok',
     'book_update'                 => 'oppdaterte bok',
-    'book_update_notification'    => 'Book successfully updated',
+    'book_update_notification'    => 'Boken ble oppdatert',
     'book_delete'                 => 'slettet bok',
-    'book_delete_notification'    => 'Book successfully deleted',
+    'book_delete_notification'    => 'Boken ble slettet',
     'book_sort'                   => 'sorterte bok',
-    'book_sort_notification'      => 'Book successfully re-sorted',
+    'book_sort_notification'      => 'Boken ble gjenopprettet',
 
     // Bookshelves
-    'bookshelf_create'            => 'created bookshelf',
-    'bookshelf_create_notification'    => 'Bookshelf successfully created',
-    'bookshelf_update'                 => 'oppdaterte bokhylle',
-    'bookshelf_update_notification'    => 'Bookshelf successfully updated',
-    'bookshelf_delete'                 => 'slettet bokhylle',
-    'bookshelf_delete_notification'    => 'Bookshelf successfully deleted',
+    'bookshelf_create'            => 'created shelf',
+    'bookshelf_create_notification'    => 'Shelf successfully created',
+    'bookshelf_create_from_book'    => 'converted book to shelf',
+    'bookshelf_create_from_book_notification'    => 'Boken ble konvertert til en bokhylle',
+    'bookshelf_update'                 => 'updated shelf',
+    'bookshelf_update_notification'    => 'Shelf successfully updated',
+    'bookshelf_delete'                 => 'deleted shelf',
+    'bookshelf_delete_notification'    => 'Shelf successfully deleted',
 
     // Favourites
     'favourite_add_notification' => '«:name» ble lagt til i dine favoritter',

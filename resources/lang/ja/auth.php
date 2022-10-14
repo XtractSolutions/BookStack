@@ -38,6 +38,11 @@ return [
     'registration_email_domain_invalid' => 'このEmailドメインでの登録は許可されていません。',
     'register_success' => '登録が完了し、ログインできるようになりました！',
 
+    // Login auto-initiation
+    'auto_init_starting' => 'ログイン試行中',
+    'auto_init_starting_desc' => 'ログイン プロセスを開始するために、認証システムに接続しています。5秒経過しても進行しない場合、下のリンクをクリックしてみてください。',
+    'auto_init_start_link' => '認証を進める',
+
     // Password Reset
     'reset_password' => 'パスワードリセット',
     'reset_password_send_instructions' => '以下にEメールアドレスを入力すると、パスワードリセットリンクが記載されたメールが送信されます。',

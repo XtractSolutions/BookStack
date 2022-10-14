@@ -28,6 +28,8 @@ return [
     // Books
     'book_create'                 => 'knjiga ustvarjena',
     'book_create_notification'    => 'Book successfully created',
+    'book_create_from_chapter'              => 'converted chapter to book',
+    'book_create_from_chapter_notification' => 'Chapter successfully converted to a book',
     'book_update'                 => 'knjiga posodobljena',
     'book_update_notification'    => 'Book successfully updated',
     'book_delete'                 => 'izbrisana knjiga',
@@ -36,12 +38,14 @@ return [
     'book_sort_notification'      => 'Book successfully re-sorted',
 
     // Bookshelves
-    'bookshelf_create'            => 'created bookshelf',
-    'bookshelf_create_notification'    => 'Bookshelf successfully created',
-    'bookshelf_update'                 => 'knjižna polica posodobljena',
-    'bookshelf_update_notification'    => 'Bookshelf successfully updated',
-    'bookshelf_delete'                 => 'knjižna polica izbrisana',
-    'bookshelf_delete_notification'    => 'Bookshelf successfully deleted',
+    'bookshelf_create'            => 'created shelf',
+    'bookshelf_create_notification'    => 'Shelf successfully created',
+    'bookshelf_create_from_book'    => 'converted book to shelf',
+    'bookshelf_create_from_book_notification'    => 'Book successfully converted to a shelf',
+    'bookshelf_update'                 => 'updated shelf',
+    'bookshelf_update_notification'    => 'Shelf successfully updated',
+    'bookshelf_delete'                 => 'deleted shelf',
+    'bookshelf_delete_notification'    => 'Shelf successfully deleted',
 
     // Favourites
     'favourite_add_notification' => '":name" has been added to your favourites',

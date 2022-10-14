@@ -1,69 +1,53 @@
 <div>
-    <div components="popup code-editor" class="popup-background code-editor">
+    <div components="popup code-editor"
+         option:code-editor:favourites="{{ setting()->getForCurrentUser('code-language-favourites', '') }}"
+         class="popup-background code-editor">
         <div refs="code-editor@container" class="popup-body" tabindex="-1">
 
-            <div class="popup-header primary-background">
+            <div class="popup-header flex-container-row primary-background">
                 <div class="popup-title">{{ trans('components.code_editor') }}</div>
-                <button class="popup-header-close" refs="popup@hide">x</button>
+                <div component="dropdown" refs="code-editor@historyDropDown" class="flex-container-row">
+                    <button refs="dropdown@toggle">
+                        <span>@icon('history')</span>
+                        <span>{{ trans('components.code_session_history') }}</span>
+                    </button>
+                    <ul refs="dropdown@menu code-editor@historyList" class="dropdown-menu"></ul>
+                </div>
+                <button class="popup-header-close" refs="popup@hide">@icon('close')</button>
             </div>
 
-            <div class="p-l popup-content">
-                <div class="form-group">
+            <div class="code-editor-body-wrap flex-container-row flex-fill">
+                <div class="code-editor-language-list flex-container-column flex-fill">
                     <label for="code-editor-language">{{ trans('components.code_language') }}</label>
-                    <div class="lang-options">
-                        <small>
-                            <a refs="code-editor@languageLink" data-lang="CSS">CSS</a>
-                            <a refs="code-editor@languageLink" data-lang="C">C</a>
-                            <a refs="code-editor@languageLink" data-lang="C++">C++</a>
-                            <a refs="code-editor@languageLink" data-lang="C#">C#</a>
-                            <a refs="code-editor@languageLink" data-lang="Fortran">Fortran</a>
-                            <a refs="code-editor@languageLink" data-lang="Go">Go</a>
-                            <a refs="code-editor@languageLink" data-lang="HTML">HTML</a>
-                            <a refs="code-editor@languageLink" data-lang="INI">INI</a>
-                            <a refs="code-editor@languageLink" data-lang="Java">Java</a>
-                            <a refs="code-editor@languageLink" data-lang="JavaScript">JavaScript</a>
-                            <a refs="code-editor@languageLink" data-lang="JSON">JSON</a>
-                            <a refs="code-editor@languageLink" data-lang="Lua">Lua</a>
-                            <a refs="code-editor@languageLink" data-lang="MarkDown">MarkDown</a>
-                            <a refs="code-editor@languageLink" data-lang="Nginx">Nginx</a>
-                            <a refs="code-editor@languageLink" data-lang="PASCAL">Pascal</a>
-                            <a refs="code-editor@languageLink" data-lang="Perl">Perl</a>
-                            <a refs="code-editor@languageLink" data-lang="PHP">PHP</a>
-                            <a refs="code-editor@languageLink" data-lang="Powershell">Powershell</a>
-                            <a refs="code-editor@languageLink" data-lang="Python">Python</a>
-                            <a refs="code-editor@languageLink" data-lang="Ruby">Ruby</a>
-                            <a refs="code-editor@languageLink" data-lang="shell">Shell/Bash</a>
-                            <a refs="code-editor@languageLink" data-lang="SQL">SQL</a>
-                            <a refs="code-editor@languageLink" data-lang="VBScript">VBScript</a>
-                            <a refs="code-editor@languageLink" data-lang="VB.NET">VB.NET</a>
-                            <a refs="code-editor@languageLink" data-lang="XML">XML</a>
-                            <a refs="code-editor@languageLink" data-lang="YAML">YAML</a>
-                        </small>
-                    </div>
                     <input refs="code-editor@languageInput" id="code-editor-language" type="text">
+                    <div refs="code-editor@language-options-container" class="lang-options">
+                        @php
+                            $languages = [
+                                'Bash', 'CSS', 'C', 'C++', 'C#', 'Diff', 'Fortran', 'F#', 'Go', 'Haskell', 'HTML', 'INI',
+                                'Java', 'JavaScript', 'JSON', 'Julia', 'Kotlin', 'LaTeX', 'Lua', 'MarkDown', 'Nginx', 'OCaml',
+                                'Pascal', 'Perl', 'PHP', 'Powershell', 'Python', 'Ruby', 'Rust', 'Shell', 'SQL', 'TypeScript',
+                                'VBScript', 'VB.NET', 'XML', 'YAML',
+                            ];
+                        @endphp
+
+                        @foreach($languages as $language)
+                            <div class="relative">
+                                <button type="button" refs="code-editor@language-button" data-favourite="false" data-lang="{{ strtolower($language) }}">{{ $language }}</button>
+                                <button class="lang-option-favorite-toggle action-favourite" data-title="{{ trans('common.favourite') }}">@icon('star-outline')</button>
+                                <button class="lang-option-favorite-toggle action-unfavourite" data-title="{{ trans('common.unfavourite') }}">@icon('star')</button>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <div class="grid half no-break v-end mb-xs">
-                        <div>
-                            <label for="code-editor-content">{{ trans('components.code_content') }}</label>
-                        </div>
-                        <div class="text-right">
-                            <div component="dropdown" refs="code-editor@historyDropDown" class="inline block">
-                                <button refs="dropdown@toggle" class="text-button text-small">@icon('history') {{ trans('components.code_session_history') }}</button>
-                                <ul refs="dropdown@menu code-editor@historyList" class="dropdown-menu"></ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="clearfix"></div>
+                <div class="code-editor-main flex-fill">
                     <textarea refs="code-editor@editor"></textarea>
                 </div>
 
-                <div class="form-group">
-                    <button refs="code-editor@saveButton" type="button" class="button">{{ trans('components.code_save') }}</button>
-                </div>
+            </div>
 
+            <div class="popup-footer">
+                <button refs="code-editor@saveButton" type="button" class="button">{{ trans('components.code_save') }}</button>
             </div>
 
         </div>

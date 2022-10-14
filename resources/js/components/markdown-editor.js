@@ -2,7 +2,7 @@ import MarkdownIt from "markdown-it";
 import mdTasksLists from 'markdown-it-task-lists';
 import Clipboard from "../services/clipboard";
 import {debounce} from "../services/util";
-
+import {patchDomFromHtmlString} from "../services/vdom";
 import DrawIO from "../services/drawio";
 
 class MarkdownEditor {
@@ -127,16 +127,29 @@ class MarkdownEditor {
     updateAndRender() {
         const content = this.cm.getValue();
         this.input.value = content;
+
         const html = this.markdown.render(content);
         window.$events.emit('editor-html-change', html);
         window.$events.emit('editor-markdown-change', content);
 
         // Set body content
+        const target = this.getDisplayTarget();
         this.displayDoc.body.className = 'page-content';
-        this.displayDoc.body.innerHTML = html;
+        patchDomFromHtmlString(target, html);
 
         // Copy styles from page head and set custom styles for editor
         this.loadStylesIntoDisplay();
+    }
+
+    getDisplayTarget() {
+        const body = this.displayDoc.body;
+
+        if (body.children.length === 0) {
+            const wrap = document.createElement('div');
+            this.displayDoc.body.append(wrap);
+        }
+
+        return body.children[0];
     }
 
     loadStylesIntoDisplay() {
@@ -198,13 +211,15 @@ class MarkdownEditor {
         extraKeys[`${metaKey}-3`] = cm => {replaceLineStart('####');};
         extraKeys[`${metaKey}-4`] = cm => {replaceLineStart('#####');};
         extraKeys[`${metaKey}-5`] = cm => {replaceLineStart('');};
-        extraKeys[`${metaKey}-d`] = cm => {replaceLineStart('');};
+        extraKeys[`${metaKey}-D`] = cm => {replaceLineStart('');};
         extraKeys[`${metaKey}-6`] = cm => {replaceLineStart('>');};
-        extraKeys[`${metaKey}-q`] = cm => {replaceLineStart('>');};
+        extraKeys[`${metaKey}-Q`] = cm => {replaceLineStart('>');};
         extraKeys[`${metaKey}-7`] = cm => {wrapSelection('\n```\n', '\n```');};
         extraKeys[`${metaKey}-8`] = cm => {wrapSelection('`', '`');};
         extraKeys[`Shift-${metaKey}-E`] = cm => {wrapSelection('`', '`');};
         extraKeys[`${metaKey}-9`] = cm => {wrapSelection('<p class="callout info">', '</p>');};
+        extraKeys[`${metaKey}-P`] = cm => {replaceLineStart('-')}
+        extraKeys[`${metaKey}-O`] = cm => {replaceLineStartForOrderedList()}
         cm.setOption('extraKeys', extraKeys);
 
         // Update data on content change
@@ -351,6 +366,19 @@ class MarkdownEditor {
             selections.head.ch += headFirst ? frontDiff : endDiff;
             selections.anchor.ch += headFirst ? endDiff : frontDiff;
             cm.setSelections([selections]);
+        }
+
+        function replaceLineStartForOrderedList() {
+            const cursor = cm.getCursor();
+            const prevLineContent = cm.getLine(cursor.line - 1) || '';
+            const listMatch = prevLineContent.match(/^(\s*)(\d)([).])\s/) || [];
+
+            const number = (Number(listMatch[2]) || 0) + 1;
+            const whiteSpace = listMatch[1] || '';
+            const listMark = listMatch[3] || '.'
+
+            const prefix = `${whiteSpace}${number}${listMark}`;
+            return replaceLineStart(prefix);
         }
 
         // Handle image upload and add image into markdown content

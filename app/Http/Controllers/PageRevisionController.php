@@ -2,18 +2,17 @@
 
 namespace BookStack\Http\Controllers;
 
+use BookStack\Actions\ActivityType;
 use BookStack\Entities\Repos\PageRepo;
 use BookStack\Entities\Tools\PageContent;
 use BookStack\Exceptions\NotFoundException;
+use BookStack\Facades\Activity;
 use Ssddanbrown\HtmlDiff\Diff;
 
 class PageRevisionController extends Controller
 {
-    protected $pageRepo;
+    protected PageRepo $pageRepo;
 
-    /**
-     * PageRevisionController constructor.
-     */
     public function __construct(PageRepo $pageRepo)
     {
         $this->pageRepo = $pageRepo;
@@ -27,11 +26,19 @@ class PageRevisionController extends Controller
     public function index(string $bookSlug, string $pageSlug)
     {
         $page = $this->pageRepo->getBySlug($bookSlug, $pageSlug);
-        $this->setPageTitle(trans('entities.pages_revisions_named', ['pageName'=>$page->getShortName()]));
+        $revisions = $page->revisions()->select([
+            'id', 'page_id', 'name', 'created_at', 'created_by', 'updated_at',
+            'type', 'revision_number', 'summary',
+        ])
+            ->selectRaw("IF(markdown = '', false, true) as is_markdown")
+            ->with(['page.book', 'createdBy'])
+            ->get();
+
+        $this->setPageTitle(trans('entities.pages_revisions_named', ['pageName' => $page->getShortName()]));
 
         return view('pages.revisions', [
-            'page'    => $page,
-            'current' => $page,
+            'revisions' => $revisions,
+            'page'      => $page,
         ]);
     }
 
@@ -84,7 +91,7 @@ class PageRevisionController extends Controller
         // TODO - Refactor PageContent so we don't need to juggle this
         $page->html = $revision->html;
         $page->html = (new PageContent($page))->render();
-        $this->setPageTitle(trans('entities.pages_revision_named', ['pageName'=>$page->getShortName()]));
+        $this->setPageTitle(trans('entities.pages_revision_named', ['pageName' => $page->getShortName()]));
 
         return view('pages.revision', [
             'page'     => $page,
@@ -124,17 +131,15 @@ class PageRevisionController extends Controller
             throw new NotFoundException("Revision #{$revId} not found");
         }
 
-        // Get the current revision for the page
-        $currentRevision = $page->getCurrentRevision();
-
-        // Check if its the latest revision, cannot delete latest revision.
-        if (intval($currentRevision->id) === intval($revId)) {
+        // Check if it's the latest revision, cannot delete the latest revision.
+        if (intval($page->currentRevision->id ?? null) === intval($revId)) {
             $this->showErrorNotification(trans('entities.revision_cannot_delete_latest'));
 
             return redirect($page->getUrl('/revisions'));
         }
 
         $revision->delete();
+        Activity::add(ActivityType::REVISION_DELETE, $revision);
         $this->showSuccessNotification(trans('entities.revision_delete_success'));
 
         return redirect($page->getUrl('/revisions'));

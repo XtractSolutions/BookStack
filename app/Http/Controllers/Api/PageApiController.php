@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 
 class PageApiController extends ApiController
 {
-    protected $pageRepo;
+    protected PageRepo $pageRepo;
 
     protected $rules = [
         'create' => [
@@ -24,8 +24,8 @@ class PageApiController extends ApiController
             'tags'       => ['array'],
         ],
         'update' => [
-            'book_id'    => ['required', 'integer'],
-            'chapter_id' => ['required', 'integer'],
+            'book_id'    => ['integer'],
+            'chapter_id' => ['integer'],
             'name'       => ['string', 'min:1', 'max:255'],
             'html'       => ['string'],
             'markdown'   => ['string'],
@@ -86,6 +86,9 @@ class PageApiController extends ApiController
      *
      * Pages will always have HTML content. They may have markdown content
      * if the markdown editor was used to last update the page.
+     *
+     * See the "Content Security" section of these docs for security considerations when using
+     * the page content returned from this endpoint.
      */
     public function read(string $id)
     {
@@ -103,6 +106,8 @@ class PageApiController extends ApiController
      */
     public function update(Request $request, string $id)
     {
+        $requestData = $this->validate($request, $this->rules['update']);
+
         $page = $this->pageRepo->getById($id, []);
         $this->checkOwnablePermission('page-update', $page);
 
@@ -127,7 +132,7 @@ class PageApiController extends ApiController
             }
         }
 
-        $updatedPage = $this->pageRepo->update($page, $request->all());
+        $updatedPage = $this->pageRepo->update($page, $requestData);
 
         return response()->json($updatedPage->forJsonDisplay());
     }

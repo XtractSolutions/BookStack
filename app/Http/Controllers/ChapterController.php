@@ -7,25 +7,26 @@ use BookStack\Entities\Models\Book;
 use BookStack\Entities\Repos\ChapterRepo;
 use BookStack\Entities\Tools\BookContents;
 use BookStack\Entities\Tools\Cloner;
+use BookStack\Entities\Tools\HierarchyTransformer;
 use BookStack\Entities\Tools\NextPreviousContentLocator;
 use BookStack\Entities\Tools\PermissionsUpdater;
 use BookStack\Exceptions\MoveOperationException;
 use BookStack\Exceptions\NotFoundException;
 use BookStack\Exceptions\PermissionsException;
+use BookStack\References\ReferenceFetcher;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class ChapterController extends Controller
 {
-    protected $chapterRepo;
+    protected ChapterRepo $chapterRepo;
+    protected ReferenceFetcher $referenceFetcher;
 
-    /**
-     * ChapterController constructor.
-     */
-    public function __construct(ChapterRepo $chapterRepo)
+    public function __construct(ChapterRepo $chapterRepo, ReferenceFetcher $referenceFetcher)
     {
         $this->chapterRepo = $chapterRepo;
+        $this->referenceFetcher = $referenceFetcher;
     }
 
     /**
@@ -76,13 +77,14 @@ class ChapterController extends Controller
         $this->setPageTitle($chapter->getShortName());
 
         return view('chapters.show', [
-            'book'        => $chapter->book,
-            'chapter'     => $chapter,
-            'current'     => $chapter,
-            'sidebarTree' => $sidebarTree,
-            'pages'       => $pages,
-            'next'        => $nextPreviousLocator->getNext(),
-            'previous'    => $nextPreviousLocator->getPrevious(),
+            'book'           => $chapter->book,
+            'chapter'        => $chapter,
+            'current'        => $chapter,
+            'sidebarTree'    => $sidebarTree,
+            'pages'          => $pages,
+            'next'           => $nextPreviousLocator->getNext(),
+            'previous'       => $nextPreviousLocator->getPrevious(),
+            'referenceCount' => $this->referenceFetcher->getPageReferenceCountToEntity($chapter),
         ]);
     }
 
@@ -271,5 +273,20 @@ class ChapterController extends Controller
         $this->showSuccessNotification(trans('entities.chapters_permissions_success'));
 
         return redirect($chapter->getUrl());
+    }
+
+    /**
+     * Convert the chapter to a book.
+     */
+    public function convertToBook(HierarchyTransformer $transformer, string $bookSlug, string $chapterSlug)
+    {
+        $chapter = $this->chapterRepo->getBySlug($bookSlug, $chapterSlug);
+        $this->checkOwnablePermission('chapter-update', $chapter);
+        $this->checkOwnablePermission('chapter-delete', $chapter);
+        $this->checkPermission('book-create-all');
+
+        $book = $transformer->transformChapterToBook($chapter);
+
+        return redirect($book->getUrl());
     }
 }

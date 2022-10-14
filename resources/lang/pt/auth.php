@@ -38,6 +38,11 @@ return [
     'registration_email_domain_invalid' => 'O domínio de e-mail usado não tem acesso permitido a esta aplicação',
     'register_success' => 'Obrigado por se registar! Você está agora registado e com a sessão iniciada.',
 
+    // Login auto-initiation
+    'auto_init_starting' => 'Tentando inicar sessão',
+    'auto_init_starting_desc' => 'Estamos a aceder ao seu sistema de autenticação para iniciar o processo de login. Se não houver progresso após 5 segundos você pode tentar clicar no link abaixo.',
+    'auto_init_start_link' => 'Prosseguir com autenticação',
+
     // Password Reset
     'reset_password' => 'Redefinir Senha',
     'reset_password_send_instructions' => 'Insira o seu endereço de e-mail abaixo, e uma mensagem com o link de redefinição de palavra-passe será lhe enviada.',

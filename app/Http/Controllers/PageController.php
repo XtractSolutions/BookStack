@@ -10,9 +10,11 @@ use BookStack\Entities\Tools\Cloner;
 use BookStack\Entities\Tools\NextPreviousContentLocator;
 use BookStack\Entities\Tools\PageContent;
 use BookStack\Entities\Tools\PageEditActivity;
+use BookStack\Entities\Tools\PageEditorData;
 use BookStack\Entities\Tools\PermissionsUpdater;
 use BookStack\Exceptions\NotFoundException;
 use BookStack\Exceptions\PermissionsException;
+use BookStack\References\ReferenceFetcher;
 use Exception;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Request;
@@ -21,14 +23,16 @@ use Throwable;
 
 class PageController extends Controller
 {
-    protected $pageRepo;
+    protected PageRepo $pageRepo;
+    protected ReferenceFetcher $referenceFetcher;
 
     /**
      * PageController constructor.
      */
-    public function __construct(PageRepo $pageRepo)
+    public function __construct(PageRepo $pageRepo, ReferenceFetcher $referenceFetcher)
     {
         $this->pageRepo = $pageRepo;
+        $this->referenceFetcher = $referenceFetcher;
     }
 
     /**
@@ -82,22 +86,15 @@ class PageController extends Controller
      *
      * @throws NotFoundException
      */
-    public function editDraft(string $bookSlug, int $pageId)
+    public function editDraft(Request $request, string $bookSlug, int $pageId)
     {
         $draft = $this->pageRepo->getById($pageId);
         $this->checkOwnablePermission('page-create', $draft->getParent());
+
+        $editorData = new PageEditorData($draft, $this->pageRepo, $request->query('editor', ''));
         $this->setPageTitle(trans('entities.pages_edit_draft'));
 
-        $draftsEnabled = $this->isSignedIn();
-        $templates = $this->pageRepo->getTemplates(10);
-
-        return view('pages.edit', [
-            'page'          => $draft,
-            'book'          => $draft->book,
-            'isDraft'       => true,
-            'draftsEnabled' => $draftsEnabled,
-            'templates'     => $templates,
-        ]);
+        return view('pages.edit', $editorData->getViewData());
     }
 
     /**
@@ -166,6 +163,7 @@ class PageController extends Controller
             'pageNav'         => $pageNav,
             'next'            => $nextPreviousLocator->getNext(),
             'previous'        => $nextPreviousLocator->getPrevious(),
+            'referenceCount'  => $this->referenceFetcher->getPageReferenceCountToEntity($page),
         ]);
     }
 
@@ -188,43 +186,19 @@ class PageController extends Controller
      *
      * @throws NotFoundException
      */
-    public function edit(string $bookSlug, string $pageSlug)
+    public function edit(Request $request, string $bookSlug, string $pageSlug)
     {
         $page = $this->pageRepo->getBySlug($bookSlug, $pageSlug);
         $this->checkOwnablePermission('page-update', $page);
 
-        $page->isDraft = false;
-        $editActivity = new PageEditActivity($page);
-
-        // Check for active editing
-        $warnings = [];
-        if ($editActivity->hasActiveEditing()) {
-            $warnings[] = $editActivity->activeEditingMessage();
+        $editorData = new PageEditorData($page, $this->pageRepo, $request->query('editor', ''));
+        if ($editorData->getWarnings()) {
+            $this->showWarningNotification(implode("\n", $editorData->getWarnings()));
         }
 
-        // Check for a current draft version for this user
-        $userDraft = $this->pageRepo->getUserDraft($page);
-        if ($userDraft !== null) {
-            $page->forceFill($userDraft->only(['name', 'html', 'markdown']));
-            $page->isDraft = true;
-            $warnings[] = $editActivity->getEditingActiveDraftMessage($userDraft);
-        }
-
-        if (count($warnings) > 0) {
-            $this->showWarningNotification(implode("\n", $warnings));
-        }
-
-        $templates = $this->pageRepo->getTemplates(10);
-        $draftsEnabled = $this->isSignedIn();
         $this->setPageTitle(trans('entities.pages_editing_named', ['pageName' => $page->getShortName()]));
 
-        return view('pages.edit', [
-            'page'          => $page,
-            'book'          => $page->book,
-            'current'       => $page,
-            'draftsEnabled' => $draftsEnabled,
-            'templates'     => $templates,
-        ]);
+        return view('pages.edit', $editorData->getViewData());
     }
 
     /**
