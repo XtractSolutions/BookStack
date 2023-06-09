@@ -37,6 +37,10 @@ return [
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
 
+        'ses' => [
+            'transport' => 'ses',
+        ],
+
         'sendmail' => [
             'transport' => 'sendmail',
             'path' => env('MAIL_SENDMAIL_COMMAND', '/usr/sbin/sendmail -bs'),
