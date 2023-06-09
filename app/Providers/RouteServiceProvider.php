@@ -20,14 +20,6 @@ class RouteServiceProvider extends ServiceProvider
     public const HOME = '/';
 
     /**
-     * This namespace is applied to the controller routes in your routes file.
-     *
-     * In addition, it is set as the URL generator's root namespace.
-     *
-     * @var string
-     */
-
-    /**
      * Define your route model bindings, pattern filters, etc.
      *
      * @return void
@@ -93,7 +85,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function configureRateLimiting()
     {
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
     }
 }

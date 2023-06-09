@@ -14,21 +14,11 @@ use Illuminate\Http\Request;
 
 class ConfirmEmailController extends Controller
 {
-    protected $emailConfirmationService;
-    protected $loginService;
-    protected $userRepo;
-
-    /**
-     * Create a new controller instance.
-     */
     public function __construct(
-        EmailConfirmationService $emailConfirmationService,
-        LoginService $loginService,
-        UserRepo $userRepo
+        protected EmailConfirmationService $emailConfirmationService,
+        protected LoginService $loginService,
+        protected UserRepo $userRepo
     ) {
-        $this->emailConfirmationService = $emailConfirmationService;
-        $this->loginService = $loginService;
-        $this->userRepo = $userRepo;
     }
 
     /**
@@ -52,13 +42,27 @@ class ConfirmEmailController extends Controller
     }
 
     /**
+     * Show the form for a user to provide their positive confirmation of their email.
+     */
+    public function showAcceptForm(string $token)
+    {
+        return view('auth.register-confirm-accept', ['token' => $token]);
+    }
+
+    /**
      * Confirms an email via a token and logs the user into the system.
      *
      * @throws ConfirmationEmailException
      * @throws Exception
      */
-    public function confirm(string $token)
+    public function confirm(Request $request)
     {
+        $validated = $this->validate($request, [
+            'token' => ['required', 'string']
+        ]);
+
+        $token = $validated['token'];
+
         try {
             $userId = $this->emailConfirmationService->checkTokenAndGetUserId($token);
         } catch (UserTokenNotFoundException $exception) {

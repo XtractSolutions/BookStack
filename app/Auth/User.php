@@ -72,7 +72,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     protected $hidden = [
         'password', 'remember_token', 'system_name', 'email_confirmed', 'external_auth_id', 'email',
-        'created_at', 'updated_at', 'image_id', 'roles', 'avatar', 'user_id',
+        'created_at', 'updated_at', 'image_id', 'roles', 'avatar', 'user_id', 'pivot',
     ];
 
     /**
@@ -200,6 +200,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function attachRole(Role $role)
     {
         $this->roles()->attach($role->id);
+        $this->unsetRelation('roles');
     }
 
     /**

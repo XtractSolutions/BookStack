@@ -5,6 +5,8 @@ namespace Tests\Auth;
 use BookStack\Actions\ActivityType;
 use BookStack\Auth\Role;
 use BookStack\Auth\User;
+use BookStack\Facades\Theme;
+use BookStack\Theming\ThemeEvents;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Testing\TestResponse;
@@ -42,6 +44,7 @@ class OidcTest extends TestCase
             'oidc.user_to_groups'         => false,
             'oidc.groups_claim'           => 'group',
             'oidc.remove_from_groups'     => false,
+            'oidc.external_id_claim'      => 'sub',
         ]);
     }
 
@@ -93,7 +96,7 @@ class OidcTest extends TestCase
 
     public function test_logout_route_functions()
     {
-        $this->actingAs($this->getEditor());
+        $this->actingAs($this->users->editor());
         $this->post('/logout');
         $this->assertFalse(auth()->check());
     }
@@ -228,7 +231,7 @@ class OidcTest extends TestCase
 
     public function test_auth_login_as_existing_user()
     {
-        $editor = $this->getEditor();
+        $editor = $this->users->editor();
         $editor->external_auth_id = 'benny505';
         $editor->save();
 
@@ -245,7 +248,7 @@ class OidcTest extends TestCase
 
     public function test_auth_login_as_existing_user_email_with_different_auth_id_fails()
     {
-        $editor = $this->getEditor();
+        $editor = $this->users->editor();
         $editor->external_auth_id = 'editor101';
         $editor->save();
 
@@ -360,6 +363,55 @@ class OidcTest extends TestCase
         $this->assertTrue(auth()->check());
     }
 
+    public function test_auth_login_with_autodiscovery_with_keys_that_do_not_have_use_property()
+    {
+        // Based on reading the OIDC discovery spec:
+        // > This contains the signing key(s) the RP uses to validate signatures from the OP. The JWK Set MAY also
+        // > contain the Server's encryption key(s), which are used by RPs to encrypt requests to the Server. When
+        // > both signing and encryption keys are made available, a use (Key Use) parameter value is REQUIRED for all
+        // > keys in the referenced JWK Set to indicate each key's intended usage.
+        // We can assume that keys without use are intended for signing.
+        $this->withAutodiscovery();
+
+        $keyArray = OidcJwtHelper::publicJwkKeyArray();
+        unset($keyArray['use']);
+
+        $this->mockHttpClient([
+            $this->getAutoDiscoveryResponse(),
+            new Response(200, [
+                'Content-Type'  => 'application/json',
+                'Cache-Control' => 'no-cache, no-store',
+                'Pragma'        => 'no-cache',
+            ], json_encode([
+                'keys' => [
+                    $keyArray,
+                ],
+            ])),
+        ]);
+
+        $this->assertFalse(auth()->check());
+        $this->runLogin();
+        $this->assertTrue(auth()->check());
+    }
+
+    public function test_auth_uses_configured_external_id_claim_option()
+    {
+        config()->set([
+            'oidc.external_id_claim' => 'super_awesome_id',
+        ]);
+
+        $resp = $this->runLogin([
+            'email'            => 'benny@example.com',
+            'sub'              => 'benny1010101',
+            'super_awesome_id' => 'xXBennyTheGeezXx',
+        ]);
+        $resp->assertRedirect('/');
+
+        /** @var User $user */
+        $user = User::query()->where('email', '=', 'benny@example.com')->first();
+        $this->assertEquals('xXBennyTheGeezXx', $user->external_auth_id);
+    }
+
     public function test_login_group_sync()
     {
         config()->set([
@@ -411,6 +463,60 @@ class OidcTest extends TestCase
         /** @var User $user */
         $user = User::query()->where('email', '=', 'benny@example.com')->first();
         $this->assertTrue($user->hasRole($roleA->id));
+    }
+
+    public function test_oidc_id_token_pre_validate_theme_event_without_return()
+    {
+        $args = [];
+        $callback = function (...$eventArgs) use (&$args) {
+            $args = $eventArgs;
+        };
+        Theme::listen(ThemeEvents::OIDC_ID_TOKEN_PRE_VALIDATE, $callback);
+
+        $resp = $this->runLogin([
+            'email' => 'benny@example.com',
+            'sub'   => 'benny1010101',
+            'name'  => 'Benny',
+        ]);
+        $resp->assertRedirect('/');
+
+        $this->assertDatabaseHas('users', [
+            'external_auth_id' => 'benny1010101',
+        ]);
+
+        $this->assertArrayHasKey('iss', $args[0]);
+        $this->assertArrayHasKey('sub', $args[0]);
+        $this->assertEquals('Benny', $args[0]['name']);
+        $this->assertEquals('benny1010101', $args[0]['sub']);
+
+        $this->assertArrayHasKey('access_token', $args[1]);
+        $this->assertArrayHasKey('expires_in', $args[1]);
+        $this->assertArrayHasKey('refresh_token', $args[1]);
+    }
+
+    public function test_oidc_id_token_pre_validate_theme_event_with_return()
+    {
+        $callback = function (...$eventArgs) {
+            return array_merge($eventArgs[0], [
+                'email' => 'lenny@example.com',
+                'sub' => 'lenny1010101',
+                'name' => 'Lenny',
+            ]);
+        };
+        Theme::listen(ThemeEvents::OIDC_ID_TOKEN_PRE_VALIDATE, $callback);
+
+        $resp = $this->runLogin([
+            'email' => 'benny@example.com',
+            'sub'   => 'benny1010101',
+            'name'  => 'Benny',
+        ]);
+        $resp->assertRedirect('/');
+
+        $this->assertDatabaseHas('users', [
+            'email' => 'lenny@example.com',
+            'external_auth_id' => 'lenny1010101',
+            'name' => 'Lenny',
+        ]);
     }
 
     protected function withAutodiscovery()

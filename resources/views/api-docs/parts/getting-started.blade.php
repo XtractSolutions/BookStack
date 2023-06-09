@@ -14,11 +14,11 @@
         HTTP POST calls upon events occurring in BookStack.
     </li>
     <li>
-        <a href="https://github.com/BookStackApp/BookStack/blob/master/dev/docs/visual-theme-system.md" target="_blank" rel="noopener noreferrer">Visual Theme System</a> -
+        <a href="https://github.com/BookStackApp/BookStack/blob/development/dev/docs/visual-theme-system.md" target="_blank" rel="noopener noreferrer">Visual Theme System</a> -
         Methods to override views, translations and icons within BookStack.
     </li>
     <li>
-        <a href="https://github.com/BookStackApp/BookStack/blob/master/dev/docs/logical-theme-system.md" target="_blank" rel="noopener noreferrer">Logical Theme System</a> -
+        <a href="https://github.com/BookStackApp/BookStack/blob/development/dev/docs/logical-theme-system.md" target="_blank" rel="noopener noreferrer">Logical Theme System</a> -
         Methods to extend back-end functionality within BookStack.
     </li>
 </ul>
@@ -53,9 +53,18 @@
 
 <ul>
     <li>application/json</li>
-    <li>application/x-www-form-urlencoded</li>
-    <li>multipart/form-data</li>
+    <li>application/x-www-form-urlencoded*</li>
+    <li>multipart/form-data*</li>
 </ul>
+
+<p>
+    <em>
+        * Form requests currently only work for POST requests due to how PHP handles request data.
+        If you need to use these formats for PUT or DELETE requests you can work around this limitation by
+        using a POST request and providing a "_method" parameter with the value equal to
+        <code>PUT</code> or <code>DELETE</code>.
+    </em>
+</p>
 
 <p>
     Regardless of format chosen, ensure you set a <code>Content-Type</code> header on requests so that the system can correctly parse your request data.

@@ -3,18 +3,14 @@
 namespace BookStack\Http\Controllers;
 
 use BookStack\Actions\TagRepo;
+use BookStack\Util\SimpleListOptions;
 use Illuminate\Http\Request;
 
 class TagController extends Controller
 {
-    protected $tagRepo;
-
-    /**
-     * TagController constructor.
-     */
-    public function __construct(TagRepo $tagRepo)
-    {
-        $this->tagRepo = $tagRepo;
+    public function __construct(
+        protected TagRepo $tagRepo
+    ) {
     }
 
     /**
@@ -22,22 +18,25 @@ class TagController extends Controller
      */
     public function index(Request $request)
     {
-        $search = $request->get('search', '');
+        $listOptions = SimpleListOptions::fromRequest($request, 'tags')->withSortOptions([
+            'name' => trans('common.sort_name'),
+            'usages' => trans('entities.tags_usages'),
+        ]);
+
         $nameFilter = $request->get('name', '');
         $tags = $this->tagRepo
-            ->queryWithTotals($search, $nameFilter)
+            ->queryWithTotals($listOptions, $nameFilter)
             ->paginate(50)
-            ->appends(array_filter([
-                'search' => $search,
+            ->appends(array_filter(array_merge($listOptions->getPaginationAppends(), [
                 'name'   => $nameFilter,
-            ]));
+            ])));
 
         $this->setPageTitle(trans('entities.tags'));
 
         return view('tags.index', [
-            'tags'       => $tags,
-            'search'     => $search,
-            'nameFilter' => $nameFilter,
+            'tags'        => $tags,
+            'nameFilter'  => $nameFilter,
+            'listOptions' => $listOptions,
         ]);
     }
 
@@ -46,7 +45,7 @@ class TagController extends Controller
      */
     public function getNameSuggestions(Request $request)
     {
-        $searchTerm = $request->get('search', null);
+        $searchTerm = $request->get('search', '');
         $suggestions = $this->tagRepo->getNameSuggestions($searchTerm);
 
         return response()->json($suggestions);
@@ -57,8 +56,8 @@ class TagController extends Controller
      */
     public function getValueSuggestions(Request $request)
     {
-        $searchTerm = $request->get('search', null);
-        $tagName = $request->get('name', null);
+        $searchTerm = $request->get('search', '');
+        $tagName = $request->get('name', '');
         $suggestions = $this->tagRepo->getValueSuggestions($searchTerm, $tagName);
 
         return response()->json($suggestions);
