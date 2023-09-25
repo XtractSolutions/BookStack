@@ -137,4 +137,10 @@ return [
         'thumbnail_attribute'    => env('LDAP_THUMBNAIL_ATTRIBUTE', null),
     ],
 
+    'ses' => [
+        'key' => env('AWS_KEY'),
+        'secret' => env('AWS_SECRET'),
+        'region' => env('AWS_REGION', 'us-east-1'),
+    ],
+
 ];

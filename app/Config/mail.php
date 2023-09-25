@@ -42,6 +42,10 @@ return [
             'tls_required' => ($mailEncryption === 'tls' || $mailEncryption === 'ssl'),
         ],
 
+        'ses' => [
+            'transport' => 'ses',
+        ],
+
         'sendmail' => [
             'transport' => 'sendmail',
             'path' => env('MAIL_SENDMAIL_COMMAND', '/usr/sbin/sendmail -bs'),
