@@ -121,7 +121,7 @@ return [
             'include_stack_traces' => env('INCLUDE_STACK_TRACES', 'false'),
             'retention' => 14,
             'level' => 'info',
-            'group' => '/api/'.env('DB_DATABASE'),
+            'group' => '/api/' . env('DB_DATABASE'),
             'stream' => Carbon::now()->format('Ymd'),
             'batch_size' => 1
         ]
