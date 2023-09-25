@@ -9,7 +9,6 @@ return [
     // Common Messages
     'settings' => 'Ajustes',
     'settings_save' => 'Guardar ajustes',
-    'settings_save_success' => 'Ajustes guardados',
     'system_version' => 'Versión de BookStack',
     'categories' => 'Categorías',
 
@@ -164,6 +163,7 @@ return [
     'role_manage_settings' => 'Gestionar ajustes de la aplicación',
     'role_export_content' => 'Exportar contenido',
     'role_editor_change' => 'Cambiar editor de página',
+    'role_notifications' => 'Recibir y gestionar notificaciones',
     'role_asset' => 'Permisos de contenido',
     'roles_system_warning' => 'Tenga en cuenta que el acceso a cualquiera de los tres permisos anteriores puede permitir a un usuario alterar sus propios privilegios o los privilegios de otros en el sistema. Sólo asignar roles con estos permisos a usuarios de confianza.',
     'role_asset_desc' => 'Estos permisos controlan el acceso por defecto a los contenidos del sistema. Los permisos de Libros, Capítulos y Páginas sobreescribiran estos permisos.',
@@ -232,8 +232,6 @@ return [
     'user_api_token_expiry' => 'Fecha de expiración',
     'user_api_token_expiry_desc' => 'Establece una fecha en la que este token expira. Después de esta fecha, las solicitudes realizadas usando este token ya no funcionarán. Dejar este campo en blanco fijará un vencimiento de 100 años en el futuro.',
     'user_api_token_create_secret_message' => 'Inmediatamente después de crear este token se generarán y mostrarán sus correspondientes "Token ID" y "Token Secret". El "Token Secret" sólo se mostrará una vez, así que asegúrese de copiar el valor a un lugar seguro antes de proceder.',
-    'user_api_token_create_success' => 'Token API creado correctamente',
-    'user_api_token_update_success' => 'Token API actualizado correctamente',
     'user_api_token' => 'Token API',
     'user_api_token_id' => 'Token ID',
     'user_api_token_id_desc' => 'Este es un identificador no editable generado por el sistema y único para este token que necesitará ser proporcionado en solicitudes de API.',
@@ -244,7 +242,6 @@ return [
     'user_api_token_delete' => 'Borrar token',
     'user_api_token_delete_warning' => 'Esto eliminará completamente este token API con el nombre \':tokenName\' del sistema.',
     'user_api_token_delete_confirm' => '¿Está seguro de que desea borrar este API token?',
-    'user_api_token_delete_success' => 'Token API borrado correctamente',
 
     // Webhooks
     'webhooks' => 'Webhooks',

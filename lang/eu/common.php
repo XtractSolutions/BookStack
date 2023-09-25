@@ -6,6 +6,7 @@ return [
 
     // Buttons
     'cancel' => 'Ezeztatu',
+    'close' => 'Close',
     'confirm' => 'Berretsi',
     'back' => 'Itzuli',
     'save' => 'Gorde',
@@ -41,6 +42,7 @@ return [
     'remove' => 'Ezabatu',
     'add' => 'Gehitu',
     'configure' => 'Konfiguratu',
+    'manage' => 'Manage',
     'fullscreen' => 'Pantaila osoa',
     'favourite' => 'Gogokoa',
     'unfavourite' => 'Desatsegina',

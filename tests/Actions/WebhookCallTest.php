@@ -2,11 +2,13 @@
 
 namespace Tests\Actions;
 
-use BookStack\Actions\ActivityLogger;
-use BookStack\Actions\ActivityType;
-use BookStack\Actions\DispatchWebhookJob;
-use BookStack\Actions\Webhook;
-use BookStack\Auth\User;
+use BookStack\Activity\ActivityType;
+use BookStack\Activity\DispatchWebhookJob;
+use BookStack\Activity\Models\Webhook;
+use BookStack\Activity\Tools\ActivityLogger;
+use BookStack\Api\ApiToken;
+use BookStack\Entities\Models\PageRevision;
+use BookStack\Users\Models\User;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
@@ -46,6 +48,24 @@ class WebhookCallTest extends TestCase
         Bus::assertNotDispatched(DispatchWebhookJob::class);
     }
 
+    public function test_webhook_runs_for_delete_actions()
+    {
+        $this->newWebhook(['active' => true, 'endpoint' => 'https://wh.example.com'], ['all']);
+        Http::fake([
+            '*' => Http::response('', 500),
+        ]);
+
+        $user = $this->users->newUser();
+        $resp = $this->asAdmin()->delete($user->getEditUrl());
+        $resp->assertRedirect('/settings/users');
+
+        /** @var ApiToken $apiToken */
+        $editor = $this->users->editor();
+        $apiToken = ApiToken::factory()->create(['user_id' => $editor]);
+        $resp = $this->delete($editor->getEditUrl('/api-tokens/' . $apiToken->id));
+        $resp->assertRedirect($editor->getEditUrl('#api_tokens'));
+    }
+
     public function test_failed_webhook_call_logs_error()
     {
         $logger = $this->withTestLogger();
@@ -78,6 +98,20 @@ class WebhookCallTest extends TestCase
 
         $webhook->refresh();
         $this->assertEquals('Failed to perform request', $webhook->last_error);
+        $this->assertNotNull($webhook->last_errored_at);
+    }
+
+    public function test_webhook_uses_ssr_hosts_option_if_set()
+    {
+        config()->set('app.ssr_hosts', 'https://*.example.com');
+        $http = Http::fake();
+
+        $webhook = $this->newWebhook(['active' => true, 'endpoint' => 'https://wh.example.co.uk'], ['all']);
+        $this->runEvent(ActivityType::ROLE_CREATE);
+        $http->assertNothingSent();
+
+        $webhook->refresh();
+        $this->assertEquals('The URL does not match the configured allowed SSR hosts', $webhook->last_error);
         $this->assertNotNull($webhook->last_errored_at);
     }
 
@@ -120,7 +154,7 @@ class WebhookCallTest extends TestCase
         $activityLogger->add($event, $detail);
     }
 
-    protected function newWebhook(array $attrs = [], array $events = ['all']): Webhook
+    protected function newWebhook(array $attrs, array $events): Webhook
     {
         /** @var Webhook $webhook */
         $webhook = Webhook::factory()->create($attrs);

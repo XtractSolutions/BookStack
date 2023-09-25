@@ -9,7 +9,6 @@ return [
     // Common Messages
     'settings' => '설정',
     'settings_save' => '적용',
-    'settings_save_success' => '설정 적용함',
     'system_version' => '시스템 버전',
     'categories' => '카테고리',
 
@@ -164,6 +163,7 @@ return [
     'role_manage_settings' => '사이트 설정 관리',
     'role_export_content' => '항목 내보내기',
     'role_editor_change' => '페이지 편집기 변경',
+    'role_notifications' => 'Receive & manage notifications',
     'role_asset' => '권한 항목',
     'roles_system_warning' => '위 세 권한은 자신의 권한이나 다른 유저의 권한을 바꿀 수 있습니다.',
     'role_asset_desc' => '책, 챕터, 문서별 권한은 이 설정에 우선합니다.',
@@ -232,8 +232,6 @@ return [
     'user_api_token_expiry' => '만료일',
     'user_api_token_expiry_desc' => '이 날짜 이후에 이 토큰이 만든 요청은 작동하지 않습니다. 공백은 만료일을 100년 후로 둡니다.',
     'user_api_token_create_secret_message' => '토큰을 만든 직후 "Token ID"와 "Token Secret"이 한 번만 표시되므로 안전한 장소에 보관하세요.',
-    'user_api_token_create_success' => 'API 토큰을 만들었습니다.',
-    'user_api_token_update_success' => 'API 토큰을 갱신했습니다.',
     'user_api_token' => 'API 토큰',
     'user_api_token_id' => '토큰 ID',
     'user_api_token_id_desc' => '토큰이 API 요청 시 제공해야 할 식별자입니다. 편집 불가능한 시스템이 생성합니다.',
@@ -244,7 +242,6 @@ return [
     'user_api_token_delete' => '토큰 삭제',
     'user_api_token_delete_warning' => '\':tokenName\'을 시스템에서 삭제합니다.',
     'user_api_token_delete_confirm' => '이 API 토큰을 지울 건가요?',
-    'user_api_token_delete_success' => '토큰 삭제함',
 
     // Webhooks
     'webhooks' => '웹 훅',

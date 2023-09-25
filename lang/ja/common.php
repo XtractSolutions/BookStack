@@ -6,6 +6,7 @@ return [
 
     // Buttons
     'cancel' => 'キャンセル',
+    'close' => '閉じる',
     'confirm' => '確認',
     'back' => '戻る',
     'save' => '保存',
@@ -41,6 +42,7 @@ return [
     'remove' => '削除',
     'add' => '追加',
     'configure' => '設定',
+    'manage' => '管理',
     'fullscreen' => '全画面',
     'favourite' => 'お気に入り',
     'unfavourite' => 'お気に入りから削除',

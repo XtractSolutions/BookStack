@@ -6,6 +6,7 @@ return [
 
     // Buttons
     'cancel' => '取消',
+    'close' => 'Close',
     'confirm' => '確認',
     'back' => '返回',
     'save' => '儲存',
@@ -41,6 +42,7 @@ return [
     'remove' => '移除',
     'add' => '新增',
     'configure' => '配置',
+    'manage' => 'Manage',
     'fullscreen' => '全螢幕',
     'favourite' => '最愛',
     'unfavourite' => '取消最愛',

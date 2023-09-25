@@ -9,7 +9,6 @@ return [
     // Common Messages
     'settings' => 'Einstellungen',
     'settings_save' => 'Einstellungen speichern',
-    'settings_save_success' => 'Einstellungen gespeichert',
     'system_version' => 'Systemversion',
     'categories' => 'Kategorien',
 
@@ -165,6 +164,7 @@ Hinweis: Benutzer können ihre E-Mail Adresse nach erfolgreicher Registrierung �
     'role_manage_settings' => 'Globaleinstellungen verwalten',
     'role_export_content' => 'Inhalt exportieren',
     'role_editor_change' => 'Seiteneditor ändern',
+    'role_notifications' => 'Empfangen und Verwalten von Benachrichtigungen',
     'role_asset' => 'Berechtigungen',
     'roles_system_warning' => 'Beachte, dass der Zugriff auf eine der oben genannten drei Berechtigungen einem Benutzer erlauben kann, seine eigenen Berechtigungen oder die Rechte anderer im System zu ändern. Weise nur Rollen mit diesen Berechtigungen vertrauenswürdigen Benutzern zu.',
     'role_asset_desc' => 'Diese Berechtigungen gelten für den Standard-Zugriff innerhalb des Systems. Berechtigungen für Bücher, Kapitel und Seiten überschreiben diese Berechtigungen.',
@@ -233,8 +233,6 @@ Hinweis: Benutzer können ihre E-Mail Adresse nach erfolgreicher Registrierung �
     'user_api_token_expiry' => 'Ablaufdatum',
     'user_api_token_expiry_desc' => 'Lege ein Datum fest, zu dem dieser Token abläuft. Nach diesem Datum funktionieren Anfragen, die mit diesem Token gestellt werden, nicht mehr. Wenn du dieses Feld leer lässt, wird ein Ablaufdatum von 100 Jahren in der Zukunft festgelegt.',
     'user_api_token_create_secret_message' => 'Unmittelbar nach der Erstellung dieses Tokens wird eine "Token ID" & ein "Token Kennwort" generiert und angezeigt. Das Kennwort wird nur ein einziges Mal angezeigt. Stelle also sicher, dass du den Inhalt an einen sicheren Ort kopierst, bevor du fortfährst.',
-    'user_api_token_create_success' => 'API-Token erfolgreich erstellt',
-    'user_api_token_update_success' => 'API-Token erfolgreich aktualisiert',
     'user_api_token' => 'API-Token',
     'user_api_token_id' => 'Token ID',
     'user_api_token_id_desc' => 'Dies ist ein nicht editierbarer, vom System generierter Identifikator für diesen Token, welcher bei API-Anfragen angegeben werden muss.',
@@ -245,7 +243,6 @@ Hinweis: Benutzer können ihre E-Mail Adresse nach erfolgreicher Registrierung �
     'user_api_token_delete' => 'Lösche Token',
     'user_api_token_delete_warning' => 'Dies löscht den API-Token mit dem Namen \':tokenName\' vollständig aus dem System.',
     'user_api_token_delete_confirm' => 'Bist du sicher, dass du diesen API-Token löschen möchtest?',
-    'user_api_token_delete_success' => 'API-Token erfolgreich gelöscht',
 
     // Webhooks
     'webhooks' => 'Webhooks',

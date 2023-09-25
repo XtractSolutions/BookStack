@@ -6,6 +6,7 @@ return [
 
     // Buttons
     'cancel' => '취소',
+    'close' => 'Close',
     'confirm' => '확인',
     'back' => '뒤로',
     'save' => '저장',
@@ -41,6 +42,7 @@ return [
     'remove' => '제거',
     'add' => '추가',
     'configure' => '설정',
+    'manage' => 'Manage',
     'fullscreen' => '전체화면',
     'favourite' => '즐겨찾기',
     'unfavourite' => '즐겨찾기 해제',

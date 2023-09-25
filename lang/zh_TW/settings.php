@@ -9,7 +9,6 @@ return [
     // Common Messages
     'settings' => '設定',
     'settings_save' => '儲存設定',
-    'settings_save_success' => '設定已儲存',
     'system_version' => '系統版本',
     'categories' => '分類',
 
@@ -164,6 +163,7 @@ return [
     'role_manage_settings' => '管理應用程式設定',
     'role_export_content' => '匯出內容',
     'role_editor_change' => '重設頁面編輯器',
+    'role_notifications' => 'Receive & manage notifications',
     'role_asset' => '資源權限',
     'roles_system_warning' => '請注意，有上述三項權限中的任一項的使用者都可以更改自己或系統中其他人的權限。有這些權限的角色只應分配給受信任的使用者。',
     'role_asset_desc' => '對系統內資源的預設權限將由這裡的權限控制。若有單獨設定在書本、章節和頁面上的權限，將會覆寫這裡的權限設定。',
@@ -232,8 +232,6 @@ return [
     'user_api_token_expiry' => '到期日',
     'user_api_token_expiry_desc' => '設定此權杖的到期日。在此日期後，使用此權杖發出的請求將不再起作用。若將此欄留空，將會設定在100年後過期。',
     'user_api_token_create_secret_message' => '建立此權杖後，將會立即生成並顯示「權杖 ID」與「權杖密碼」。該密碼將只會顯示一次，因此請在繼續操作前將其複製到安全的地方。',
-    'user_api_token_create_success' => '成功建立 API 權杖',
-    'user_api_token_update_success' => '成功更新 API 權杖',
     'user_api_token' => 'API 權杖',
     'user_api_token_id' => '權杖 ID',
     'user_api_token_id_desc' => '這是此權杖由系統生成的不可編輯識別字串，必須在 API 請求中提供。',
@@ -244,7 +242,6 @@ return [
     'user_api_token_delete' => '刪除權杖',
     'user_api_token_delete_warning' => '這將會從系統中完全刪除名為「:tokenName」的 API 權杖。',
     'user_api_token_delete_confirm' => '您確定要刪除此 API 權杖嗎？',
-    'user_api_token_delete_success' => 'API 權杖已成功刪除',
 
     // Webhooks
     'webhooks' => 'Webhooks',

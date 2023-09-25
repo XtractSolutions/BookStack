@@ -9,7 +9,6 @@ return [
     // Common Messages
     'settings' => 'Ustawienia',
     'settings_save' => 'Zapisz ustawienia',
-    'settings_save_success' => 'Ustawienia zapisane',
     'system_version' => 'Wersja Systemu',
     'categories' => 'Kategorie',
 
@@ -164,6 +163,7 @@ return [
     'role_manage_settings' => 'Zarządzanie ustawieniami aplikacji',
     'role_export_content' => 'Eksportuj zawartość',
     'role_editor_change' => 'Zmień edytor strony',
+    'role_notifications' => 'Odbieranie i zarządzanie powiadomieniami',
     'role_asset' => 'Zarządzanie zasobami',
     'roles_system_warning' => 'Pamiętaj, że dostęp do trzech powyższych uprawnień może pozwolić użytkownikowi na zmianę własnych uprawnień lub uprawnień innych osób w systemie. Przypisz tylko role z tymi uprawnieniami do zaufanych użytkowników.',
     'role_asset_desc' => 'Te ustawienia kontrolują zarządzanie zasobami systemu. Uprawnienia książek, rozdziałów i stron nadpisują te ustawienia.',
@@ -232,8 +232,6 @@ return [
     'user_api_token_expiry' => 'Data ważności',
     'user_api_token_expiry_desc' => 'Ustaw datę, kiedy ten token wygasa. Po tej dacie żądania wykonane przy użyciu tego tokenu nie będą już działać. Pozostawienie tego pola pustego, ustawi ważność na 100 lat.',
     'user_api_token_create_secret_message' => 'Natychmiast po utworzeniu tego tokenu zostanie wygenerowany i wyświetlony "Identyfikator tokenu"" i "Token Secret". Sekret zostanie wyświetlony tylko raz, więc przed kontynuacją upewnij się, że zostanie on skopiowany w bezpiecznie miejsce.',
-    'user_api_token_create_success' => 'Klucz API został poprawnie wygenerowany',
-    'user_api_token_update_success' => 'Klucz API został poprawnie zaktualizowany',
     'user_api_token' => 'Token API',
     'user_api_token_id' => 'Token ID',
     'user_api_token_id_desc' => 'Jest to nieedytowalny identyfikator wygenerowany przez system dla tego tokenu, który musi być dostarczony w żądaniach API.',
@@ -244,7 +242,6 @@ return [
     'user_api_token_delete' => 'Usuń token',
     'user_api_token_delete_warning' => 'Spowoduje to całkowite usunięcie tokenu API o nazwie \':tokenName\' z systemu.',
     'user_api_token_delete_confirm' => 'Czy jesteś pewien, że chcesz usunąć ten token?',
-    'user_api_token_delete_success' => 'Token API został poprawnie usunięty',
 
     // Webhooks
     'webhooks' => 'Webhooki',

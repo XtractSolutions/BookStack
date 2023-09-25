@@ -9,7 +9,6 @@ return [
     // Common Messages
     'settings' => '設定',
     'settings_save' => '設定を保存',
-    'settings_save_success' => '設定を保存しました',
     'system_version' => 'システムバージョン',
     'categories' => 'カテゴリー',
 
@@ -164,6 +163,7 @@ return [
     'role_manage_settings' => 'アプリケーション設定の管理',
     'role_export_content' => 'コンテンツのエクスポート',
     'role_editor_change' => 'ページエディタの変更',
+    'role_notifications' => '通知の受信と管理',
     'role_asset' => 'アセット権限',
     'roles_system_warning' => '上記の3つの権限のいずれかを付与することは、ユーザーが自分の特権またはシステム内の他のユーザーの特権を変更できる可能性があることに注意してください。これらの権限は信頼できるユーザーにのみ割り当ててください。',
     'role_asset_desc' => '各アセットに対するデフォルトの権限を設定します。ここで設定した権限が優先されます。',
@@ -232,8 +232,6 @@ return [
     'user_api_token_expiry' => '有効期限',
     'user_api_token_expiry_desc' => 'このトークンの有効期限が切れる日付を設定します。この日付を過ぎると、このトークンを使用したリクエストは機能しなくなります。このフィールドを空白のままにすると、100年先に有効期限が設定されます。',
     'user_api_token_create_secret_message' => 'このトークンを作成するとすぐに、「トークンID」と「トークンシークレット」が生成されて表示されます。シークレットは一度しか表示されないため、続行する前に必ず値を安全な場所にコピーしてください。',
-    'user_api_token_create_success' => 'APIトークンが正常に作成されました',
-    'user_api_token_update_success' => 'APIトークンが正常に更新されました',
     'user_api_token' => 'APIトークン',
     'user_api_token_id' => 'トークンID',
     'user_api_token_id_desc' => 'これは、システムが生成した編集不可能なトークンの識別子で、APIリクエストで提供する必要があります。',
@@ -244,7 +242,6 @@ return [
     'user_api_token_delete' => 'トークンを削除',
     'user_api_token_delete_warning' => 'これにより、このAPIトークン「:tokenName」がシステムから完全に削除されます。',
     'user_api_token_delete_confirm' => 'このAPIトークンを削除してもよろしいですか？',
-    'user_api_token_delete_success' => 'APIトークンが正常に削除されました',
 
     // Webhooks
     'webhooks' => 'Webhook',

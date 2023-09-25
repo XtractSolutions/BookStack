@@ -9,7 +9,6 @@ return [
     // Common Messages
     'settings' => 'Inställningar',
     'settings_save' => 'Spara inställningar',
-    'settings_save_success' => 'Inställningarna har sparats',
     'system_version' => 'Systemversion',
     'categories' => 'Kategorier',
 
@@ -164,6 +163,7 @@ return [
     'role_manage_settings' => 'Hantera appinställningar',
     'role_export_content' => 'Exportera innehåll',
     'role_editor_change' => 'Ändra sidredigerare',
+    'role_notifications' => 'Receive & manage notifications',
     'role_asset' => 'Tillgång till innehåll',
     'roles_system_warning' => 'Var medveten om att åtkomst till någon av ovanstående tre behörigheter kan tillåta en användare att ändra sina egna rättigheter eller andras rättigheter i systemet. Tilldela endast roller med dessa behörigheter till betrodda användare.',
     'role_asset_desc' => 'Det här är standardinställningarna för allt innehåll i systemet. Eventuella anpassade rättigheter på böcker, kapitel och sidor skriver över dessa inställningar.',
@@ -232,8 +232,6 @@ return [
     'user_api_token_expiry' => 'Förfallodatum',
     'user_api_token_expiry_desc' => 'Ange ett datum då denna token går ut. Efter detta datum kommer förfrågningar som görs med denna token inte längre att fungera. Lämnar du detta fält tomt kommer utgångsdatum att sättas 100 år in i framtiden.',
     'user_api_token_create_secret_message' => 'Omedelbart efter att du skapat denna token kommer ett "Token ID" & "Token Secret" att genereras och visas. Token Secret kommer bara att visas en enda gång så se till att kopiera värdet till en säker plats innan du fortsätter.',
-    'user_api_token_create_success' => 'API-token har skapats',
-    'user_api_token_update_success' => 'API-token har uppdaterats',
     'user_api_token' => 'API-nyckel',
     'user_api_token_id' => 'Token ID',
     'user_api_token_id_desc' => 'Detta är en icke-redigerbar systemgenererad identifierare för denna token som måste tillhandahållas i API-förfrågningar.',
@@ -244,7 +242,6 @@ return [
     'user_api_token_delete' => 'Ta bort token',
     'user_api_token_delete_warning' => 'Detta kommer att helt ta bort denna API-token med namnet \':tokenName\' från systemet.',
     'user_api_token_delete_confirm' => 'Är du säker på att du vill ta bort denna API-token?',
-    'user_api_token_delete_success' => 'API-token har tagits bort',
 
     // Webhooks
     'webhooks' => 'Webhooks',

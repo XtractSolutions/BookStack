@@ -6,6 +6,7 @@ return [
 
     // Buttons
     'cancel' => 'Cancel·la',
+    'close' => 'Close',
     'confirm' => 'D\'acord',
     'back' => 'Enrere',
     'save' => 'Desa',
@@ -41,6 +42,7 @@ return [
     'remove' => 'Elimina',
     'add' => 'Afegeix',
     'configure' => 'Configure',
+    'manage' => 'Manage',
     'fullscreen' => 'Pantalla completa',
     'favourite' => 'Favourite',
     'unfavourite' => 'Unfavourite',

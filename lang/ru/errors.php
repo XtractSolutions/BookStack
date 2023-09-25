@@ -49,14 +49,16 @@ return [
     // Drawing & Images
     'image_upload_error' => 'Произошла ошибка при загрузке изображения',
     'image_upload_type_error' => 'Неправильный тип загружаемого изображения',
+    'image_upload_replace_type' => 'Замена файла изображения должна быть того же типа',
     'drawing_data_not_found' => 'Данные чертежа не могут быть загружены. Возможно, файл чертежа больше не существует или у вас нет разрешения на доступ к нему.',
 
     // Attachments
     'attachment_not_found' => 'Вложение не найдено',
-    'attachment_upload_error' => 'An error occurred uploading the attachment file',
+    'attachment_upload_error' => 'Произошла ошибка при загрузке вложенного файла',
 
     // Pages
     'page_draft_autosave_fail' => 'Не удалось сохранить черновик. Перед сохранением этой страницы убедитесь, что у вас есть подключение к Интернету.',
+    'page_draft_delete_fail' => 'Не удалось удалить черновик страницы и получить текущее сохраненное содержимое страницы',
     'page_custom_home_deletion' => 'Невозможно удалить страницу, пока она установлена как домашняя страница',
 
     // Entities
@@ -109,4 +111,6 @@ return [
     // Settings & Maintenance
     'maintenance_test_email_failure' => 'Ошибка при отправке тестового письма:',
 
+    // HTTP errors
+    'http_ssr_url_no_match' => 'The URL does not match the configured allowed SSR hosts',
 ];

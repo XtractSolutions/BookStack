@@ -6,6 +6,7 @@ return [
 
     // Buttons
     'cancel' => 'Mégsem',
+    'close' => 'Close',
     'confirm' => 'Megerősítés',
     'back' => 'Vissza',
     'save' => 'Mentés',
@@ -41,6 +42,7 @@ return [
     'remove' => 'Eltávolítás',
     'add' => 'Hozzáadás',
     'configure' => 'Configure',
+    'manage' => 'Manage',
     'fullscreen' => 'Teljes képernyő',
     'favourite' => 'Kedvencekhez ad',
     'unfavourite' => 'Kedvencekből eltávolít',

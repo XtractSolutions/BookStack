@@ -6,6 +6,7 @@ return [
 
     // Buttons
     'cancel' => 'Huỷ',
+    'close' => 'Đóng',
     'confirm' => 'Xác nhận',
     'back' => 'Quay lại',
     'save' => 'Lưu',
@@ -41,6 +42,7 @@ return [
     'remove' => 'Xóa bỏ',
     'add' => 'Thêm',
     'configure' => 'Cấu hình',
+    'manage' => 'Manage',
     'fullscreen' => 'Toàn màn hình',
     'favourite' => 'Yêu thích',
     'unfavourite' => 'Bỏ yêu thích',

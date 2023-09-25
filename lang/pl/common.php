@@ -6,6 +6,7 @@ return [
 
     // Buttons
     'cancel' => 'Anuluj',
+    'close' => 'Zamknij',
     'confirm' => 'Zatwierdź',
     'back' => 'Wstecz',
     'save' => 'Zapisz',
@@ -41,6 +42,7 @@ return [
     'remove' => 'Usuń',
     'add' => 'Dodaj',
     'configure' => 'Konfiguruj',
+    'manage' => 'Zarządzaj',
     'fullscreen' => 'Pełny ekran',
     'favourite' => 'Ulubione',
     'unfavourite' => 'Usuń z ulubionych',

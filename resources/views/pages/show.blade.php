@@ -27,15 +27,15 @@
 
     @include('entities.sibling-navigation', ['next' => $next, 'previous' => $previous])
 
-    @if ($commentsEnabled)
+    @if ($commentTree->enabled())
         @if(($previous || $next))
             <div class="px-xl">
                 <hr class="darker">
             </div>
         @endif
 
-        <div class="px-xl comments-container mb-l print-hidden">
-            @include('comments.comments', ['page' => $page])
+        <div class="comments-container mb-l print-hidden">
+            @include('comments.comments', ['commentTree' => $commentTree, 'page' => $page])
             <div class="clearfix"></div>
         </div>
     @endif
@@ -81,7 +81,7 @@
     <div id="page-details" class="entity-details mb-xl">
         <h5>{{ trans('common.details') }}</h5>
         <div class="blended-links">
-            @include('entities.meta', ['entity' => $page])
+            @include('entities.meta', ['entity' => $page, 'watchOptions' => $watchOptions])
 
             @if($book->hasPermissions())
                 <div class="active-restriction">
@@ -185,6 +185,9 @@
 
             <hr class="primary-background"/>
 
+            @if($watchOptions->canWatch() && !$watchOptions->isWatching())
+                @include('entities.watch-action', ['entity' => $page])
+            @endif
             @if(signedInUser())
                 @include('entities.favourite-action', ['entity' => $page])
             @endif

@@ -6,6 +6,7 @@ return [
 
     // Buttons
     'cancel' => 'Скасувати',
+    'close' => 'Close',
     'confirm' => 'Застосувати',
     'back' => 'Назад',
     'save' => 'Зберегти',
@@ -41,6 +42,7 @@ return [
     'remove' => 'Видалити',
     'add' => 'Додати',
     'configure' => 'Налаштувати',
+    'manage' => 'Manage',
     'fullscreen' => 'На весь екран',
     'favourite' => 'Улюблене',
     'unfavourite' => 'Прибрати з обраного',

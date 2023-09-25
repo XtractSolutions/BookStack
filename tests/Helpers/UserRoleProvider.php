@@ -2,9 +2,9 @@
 
 namespace Tests\Helpers;
 
-use BookStack\Auth\Permissions\PermissionsRepo;
-use BookStack\Auth\Role;
-use BookStack\Auth\User;
+use BookStack\Permissions\PermissionsRepo;
+use BookStack\Users\Models\Role;
+use BookStack\Users\Models\User;
 
 class UserRoleProvider
 {
@@ -48,6 +48,14 @@ class UserRoleProvider
         }
 
         return $user;
+    }
+
+    /**
+     * Get the system "guest" user.
+     */
+    public function guest(): User
+    {
+        return User::getDefault();
     }
 
     /**

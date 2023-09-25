@@ -6,6 +6,7 @@ return [
 
     // Buttons
     'cancel' => 'Tühista',
+    'close' => 'Sulge',
     'confirm' => 'Kinnita',
     'back' => 'Tagasi',
     'save' => 'Salvesta',
@@ -41,6 +42,7 @@ return [
     'remove' => 'Eemalda',
     'add' => 'Lisa',
     'configure' => 'Seadista',
+    'manage' => 'Halda',
     'fullscreen' => 'Täisekraan',
     'favourite' => 'Lemmik',
     'unfavourite' => 'Eemalda lemmik',

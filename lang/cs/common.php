@@ -6,6 +6,7 @@ return [
 
     // Buttons
     'cancel' => 'Zrušit',
+    'close' => 'Zavřít‏',
     'confirm' => 'Potvrdit',
     'back' => 'Zpět',
     'save' => 'Uložit',
@@ -41,6 +42,7 @@ return [
     'remove' => 'Odebrat',
     'add' => 'Přidat',
     'configure' => 'Nastavit',
+    'manage' => 'Spravovat',
     'fullscreen' => 'Celá obrazovka',
     'favourite' => 'Přidat do oblíbených',
     'unfavourite' => 'Odebrat z oblíbených',

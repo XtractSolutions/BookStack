@@ -6,6 +6,7 @@ return [
 
     // Buttons
     'cancel' => 'Atšaukti',
+    'close' => 'Close',
     'confirm' => 'Patvirtinti',
     'back' => 'Grįžti',
     'save' => 'Išsaugoti',
@@ -41,6 +42,7 @@ return [
     'remove' => 'Pašalinti',
     'add' => 'Pridėti',
     'configure' => 'Configure',
+    'manage' => 'Manage',
     'fullscreen' => 'Visas ekranas',
     'favourite' => 'Favourite',
     'unfavourite' => 'Unfavourite',

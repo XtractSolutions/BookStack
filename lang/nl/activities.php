@@ -15,6 +15,7 @@ return [
     'page_restore'                => 'herstelde pagina',
     'page_restore_notification'   => 'Pagina succesvol hersteld',
     'page_move'                   => 'verplaatste pagina',
+    'page_move_notification'      => 'Pagina met succes verplaatst',
 
     // Chapters
     'chapter_create'              => 'maakte hoofdstuk',
@@ -24,6 +25,7 @@ return [
     'chapter_delete'              => 'verwijderde hoofdstuk',
     'chapter_delete_notification' => 'Hoofdstuk succesvol verwijderd',
     'chapter_move'                => 'verplaatste hoofdstuk',
+    'chapter_move_notification' => 'Hoofdstuk met succes verplaatst',
 
     // Books
     'book_create'                 => 'maakte boek',
@@ -47,13 +49,32 @@ return [
     'bookshelf_delete'                 => 'heeft boekenplank verwijderd',
     'bookshelf_delete_notification'    => 'Boekenplank is succesvol verwijderd',
 
+    // Revisions
+    'revision_restore' => 'herstelde revisie',
+    'revision_delete' => 'verwijderde revisie',
+    'revision_delete_notification' => 'Revisie met succes verwijderd',
+
     // Favourites
     'favourite_add_notification' => '":name" is toegevoegd aan je favorieten',
     'favourite_remove_notification' => '":name" is verwijderd uit je favorieten',
 
-    // MFA
+    // Watching
+    'watch_update_level_notification' => 'Volg voorkeuren succesvol aangepast',
+
+    // Auth
+    'auth_login' => 'heeft ingelogd',
+    'auth_register' => 'geregistreerd als nieuwe gebruiker',
+    'auth_password_reset_request' => 'heeft een nieuw gebruikerswachtwoord aangevraagd',
+    'auth_password_reset_update' => 'heeft zijn gebruikerswachtwoord opnieuw ingesteld',
+    'mfa_setup_method' => 'heeft zijn meervoudige verificatie methode ingesteld',
     'mfa_setup_method_notification' => 'Meervoudige verificatie methode is succesvol geconfigureerd',
+    'mfa_remove_method' => 'heeft zijn meervoudige verificatie methode verwijderd',
     'mfa_remove_method_notification' => 'Meervoudige verificatie methode is succesvol verwijderd',
+
+    // Settings
+    'settings_update' => 'heeft de instellingen bijgewerkt',
+    'settings_update_notification' => 'Instellingen met succes bijgewerkt',
+    'maintenance_action_run' => 'heeft onderhoud uitgevoerd',
 
     // Webhooks
     'webhook_create' => 'webhook aangemaakt',
@@ -64,15 +85,40 @@ return [
     'webhook_delete_notification' => 'Webhook succesvol verwijderd',
 
     // Users
+    'user_create' => 'heeft gebruiker aangemaakt',
+    'user_create_notification' => 'Gebruiker met succes aangemaakt',
+    'user_update' => 'heeft gebruiker bijgewerkt',
     'user_update_notification' => 'Gebruiker succesvol bijgewerkt',
+    'user_delete' => 'heeft gebruiker verwijderd',
     'user_delete_notification' => 'Gebruiker succesvol verwijderd',
 
+    // API Tokens
+    'api_token_create' => 'heeft API token aangemaakt',
+    'api_token_create_notification' => 'API token met succes aangemaakt',
+    'api_token_update' => 'heeft API token bijgewerkt',
+    'api_token_update_notification' => 'API token met succes bijgewerkt',
+    'api_token_delete' => 'heeft API token verwijderd',
+    'api_token_delete_notification' => 'API token met succes verwijderd',
+
     // Roles
+    'role_create' => 'heeft rol aangemaakt',
     'role_create_notification' => 'Rol succesvol aangemaakt',
+    'role_update' => 'heeft rol bijgewerkt',
     'role_update_notification' => 'Rol succesvol bijgewerkt',
+    'role_delete' => 'heeft rol verwijderd',
     'role_delete_notification' => 'Rol succesvol verwijderd',
 
-    // Other
+    // Recycle Bin
+    'recycle_bin_empty' => 'leegde prullenbak',
+    'recycle_bin_restore' => 'is van prullenbak hersteld',
+    'recycle_bin_destroy' => 'is van prullenbak verwijderd',
+
+    // Comments
     'commented_on'                => 'reageerde op',
+    'comment_create'              => 'heeft opmerking toegevoegd',
+    'comment_update'              => 'heeft opmerking aangepast',
+    'comment_delete'              => 'heeft opmerking verwijderd',
+
+    // Other
     'permissions_update'          => 'wijzigde machtigingen',
 ];

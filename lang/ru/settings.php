@@ -9,7 +9,6 @@ return [
     // Common Messages
     'settings' => 'Настройки',
     'settings_save' => 'Сохранить настройки',
-    'settings_save_success' => 'Настройки сохранены',
     'system_version' => 'Версия системы',
     'categories' => 'Категории',
 
@@ -50,8 +49,8 @@ return [
 
     // Color settings
     'color_scheme' => 'Цветовая схема приложения',
-    'color_scheme_desc' => 'Set the colors to use in the application user interface. Colors can be configured separately for dark and light modes to best fit the theme and ensure legibility.',
-    'ui_colors_desc' => 'Set the application primary color and default link color. The primary color is mainly used for the header banner, buttons and interface decorations. The default link color is used for text-based links and actions, both within written content and in the application interface.',
+    'color_scheme_desc' => 'Установите цвета для использования в пользовательском интерфейсе. Цвета могут быть настроены отдельно для темных и светлых режимов, чтобы наилучшим образом соответствовать теме и обеспечить разборчивость.',
+    'ui_colors_desc' => 'Задайте основной цвет приложения и цвет ссылок по умолчанию. Основной цвет используется в основном для баннера заголовка, кнопок и декораций интерфейса. Цвет ссылок по умолчанию используется для текстовых ссылок и действий как в письменном содержании, так и в прикладном интерфейсе.',
     'app_color' => 'Основной цвет',
     'link_color' => 'Цвет ссылки',
     'content_colors_desc' => 'Задает цвета для всех элементов организационной иерархии страницы. Для удобства чтения рекомендуется выбирать цвета, яркость которых близка к цветам по умолчанию.',
@@ -138,7 +137,7 @@ return [
     'roles' => 'Роли',
     'role_user_roles' => 'Роли пользователей',
     'roles_index_desc' => 'Роли используются для группировки пользователей и предоставления системных разрешений их участникам. Когда пользователь является членом нескольких ролей, предоставленные разрешения объединяются, и пользователь наследует все возможности.',
-    'roles_x_users_assigned' => ':count user assigned|:count users assigned',
+    'roles_x_users_assigned' => ':count пользователь назначен|:count назначенных пользователей',
     'roles_x_permissions_provided' => ':count разрешение|:count разрешений',
     'roles_assigned_users' => 'Назначенные пользователи',
     'roles_permissions_provided' => 'Предоставленные разрешения',
@@ -164,6 +163,7 @@ return [
     'role_manage_settings' => 'Управление настройками приложения',
     'role_export_content' => 'Экспорт контента',
     'role_editor_change' => 'Изменение редактора страниц',
+    'role_notifications' => 'Получение и управление уведомлениями',
     'role_asset' => 'Права доступа к материалам',
     'roles_system_warning' => 'Имейте в виду, что доступ к любому из указанных выше трех разрешений может позволить пользователю изменить свои собственные привилегии или привилегии других пользователей системы. Назначать роли с этими правами можно только доверенным пользователям.',
     'role_asset_desc' => 'Эти разрешения контролируют доступ по умолчанию к параметрам внутри системы. Разрешения на книги, главы и страницы перезапишут эти разрешения.',
@@ -220,8 +220,8 @@ return [
     'users_api_tokens_create' => 'Создать токен',
     'users_api_tokens_expires' => 'Истекает',
     'users_api_tokens_docs' => 'Документация',
-    'users_mfa' => 'Двухфакторная аутентификация',
-    'users_mfa_desc' => 'Двухфакторная аутентификация повышает степень безопасности вашей учетной записи.',
+    'users_mfa' => 'Многофакторная аутентификация',
+    'users_mfa_desc' => 'Многофакторная аутентификация повышает степень безопасности вашей учетной записи.',
     'users_mfa_x_methods' => 'методов настроено :count|методов сконфигурировано :count',
     'users_mfa_configure' => 'Настройка методов',
 
@@ -232,8 +232,6 @@ return [
     'user_api_token_expiry' => 'Истекает',
     'user_api_token_expiry_desc' => 'Установите дату истечения срока действия этого токена. После наступления даты запросы, сделанные с использованием данного токена, больше не будут работать. Если оставить это поле пустым, срок действия истечет через 100 лет.',
     'user_api_token_create_secret_message' => 'Сразу после создания этого токена будут сгенерированы и отображены идентификатор токена и секретный ключ. Секретный ключ будет показан только один раз, поэтому перед продолжением обязательно скопируйте значение в безопасное и надежное место.',
-    'user_api_token_create_success' => 'API токен успешно создан',
-    'user_api_token_update_success' => 'API токен успешно обновлен',
     'user_api_token' => 'API токен',
     'user_api_token_id' => 'Идентификатор токена',
     'user_api_token_id_desc' => 'Это нередактируемый системный идентификатор для этого токена, который необходимо указывать в запросах API.',
@@ -244,12 +242,11 @@ return [
     'user_api_token_delete' => 'Удалить токен',
     'user_api_token_delete_warning' => 'Это полностью удалит API токен с именем \':tokenName\' из системы.',
     'user_api_token_delete_confirm' => 'Вы уверены, что хотите удалить этот API токен?',
-    'user_api_token_delete_success' => 'API токен успешно удален',
 
     // Webhooks
     'webhooks' => 'Вебхуки',
     'webhooks_index_desc' => 'Webhooks - это способ посылать данные на внешние URL-адреса при возникновении определенных действий и событий в системе, которые позволяют интегрировать события с внешними платформами, такими как системы обмена сообщениями или уведомлениями.',
-    'webhooks_x_trigger_events' => ':count trigger event|:count trigger events',
+    'webhooks_x_trigger_events' => ':count событие триггера|:count событий триггера',
     'webhooks_create' => 'Создать вебхук',
     'webhooks_none_created' => 'Вебхуки еще не созданы.',
     'webhooks_edit' => 'Редактировать вебхук',

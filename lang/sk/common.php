@@ -6,6 +6,7 @@ return [
 
     // Buttons
     'cancel' => 'Zrušiť',
+    'close' => 'Close',
     'confirm' => 'Potvrdiť',
     'back' => 'Späť',
     'save' => 'Uložiť',
@@ -41,6 +42,7 @@ return [
     'remove' => 'Odstrániť',
     'add' => 'Pridať',
     'configure' => 'Konfigurácia',
+    'manage' => 'Manage',
     'fullscreen' => 'Celá obrazovka',
     'favourite' => 'Pridať do obľúbených',
     'unfavourite' => 'Odstrániť z obľúbených',

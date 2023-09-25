@@ -6,6 +6,7 @@ return [
 
     // Buttons
     'cancel' => 'Abbrechen',
+    'close' => 'Schließen',
     'confirm' => 'Bestätigen',
     'back' => 'Zurück',
     'save' => 'Speichern',
@@ -19,7 +20,7 @@ return [
     'description' => 'Beschreibung',
     'role' => 'Rolle',
     'cover_image' => 'Titelbild',
-    'cover_image_description' => 'Das Bild sollte eine Auflösung von 440x250px haben.',
+    'cover_image_description' => 'Das Bild sollte eine Auflösung von ca. 440x250px haben.',
 
     // Actions
     'actions' => 'Aktionen',
@@ -41,6 +42,7 @@ return [
     'remove' => 'Entfernen',
     'add' => 'Hinzufügen',
     'configure' => 'Konfigurieren',
+    'manage' => 'Verwalten',
     'fullscreen' => 'Vollbild',
     'favourite' => 'Favoriten',
     'unfavourite' => 'Kein Favorit',
@@ -97,7 +99,7 @@ return [
     'tab_content_label' => 'Tab: Hauptinhalt anzeigen',
 
     // Email Content
-    'email_action_help' => 'Sollte es beim Anklicken der Schaltfläche ":action_text" Probleme geben, öffnen Sie folgende URL in Ihrem Browser:',
+    'email_action_help' => 'Sollte es beim Anklicken der Schaltfläche ":actionText" Probleme geben, öffnen Sie folgende URL in Ihrem Browser:',
     'email_rights' => 'Alle Rechte vorbehalten',
 
     // Footer Link Options

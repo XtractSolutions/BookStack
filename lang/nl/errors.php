@@ -49,6 +49,7 @@ return [
     // Drawing & Images
     'image_upload_error' => 'Er is een fout opgetreden bij het uploaden van de afbeelding',
     'image_upload_type_error' => 'Het geüploade afbeeldingstype is ongeldig',
+    'image_upload_replace_type' => 'Afbeeldingen moeten van hetzelfde type zijn',
     'drawing_data_not_found' => 'De gegevens van de tekening konden niet worden geladen. Het tekenbestand bestaat misschien niet meer of u hebt geen machtiging om het te openen.',
 
     // Attachments
@@ -57,6 +58,7 @@ return [
 
     // Pages
     'page_draft_autosave_fail' => 'Kon het concept niet opslaan. Zorg ervoor dat je een werkende internetverbinding hebt',
+    'page_draft_delete_fail' => 'Het is niet gelukt om het concept van de pagina te verwijderen en de opgeslagen inhoud van de huidige pagina op te halen',
     'page_custom_home_deletion' => 'Een pagina die als startpagina is ingesteld, kan niet verwijderd worden',
 
     // Entities
@@ -109,4 +111,6 @@ return [
     // Settings & Maintenance
     'maintenance_test_email_failure' => 'Fout opgetreden bij het verzenden van een test email:',
 
+    // HTTP errors
+    'http_ssr_url_no_match' => 'De URL komt niet overeen met de geconfigureerde toegestane SSR-hosts',
 ];

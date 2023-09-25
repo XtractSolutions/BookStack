@@ -9,7 +9,6 @@ return [
     // Common Messages
     'settings' => 'Indstillinger',
     'settings_save' => 'Gem indstillinger',
-    'settings_save_success' => 'Indstillingerne blev gemt',
     'system_version' => 'Systemversion',
     'categories' => 'Kategorier',
 
@@ -164,6 +163,7 @@ return [
     'role_manage_settings' => 'Administrer app-indstillinger',
     'role_export_content' => 'Eksporter indhold',
     'role_editor_change' => 'Skift side editor',
+    'role_notifications' => 'Receive & manage notifications',
     'role_asset' => 'Tilladelser for medier og "assets"',
     'roles_system_warning' => 'Vær opmærksom på, at adgang til alle af de ovennævnte tre tilladelser, kan give en bruger mulighed for at ændre deres egne brugerrettigheder eller brugerrettigheder for andre i systemet. Tildel kun roller med disse tilladelser til betroede brugere.',
     'role_asset_desc' => 'Disse tilladelser kontrollerer standardadgang til medier og "assets" i systemet. Tilladelser til bøger, kapitler og sider tilsidesætter disse tilladelser.',
@@ -232,8 +232,6 @@ return [
     'user_api_token_expiry' => 'Udløbsdato',
     'user_api_token_expiry_desc' => 'Indstil en dato, hvorpå denne token udløber. Efter denne dato fungerer anmodninger, der er lavet med denne token, ikke længere. Hvis du lader dette felt være tomt, udløber den 100 år ud i fremtiden.',
     'user_api_token_create_secret_message' => 'Umiddelbart efter oprettelse af denne token genereres og vises et "Token-ID" og Token hemmelighed". Hemmeligheden vises kun en gang, så husk at kopiere værdien til et sikkert sted inden du fortsætter.',
-    'user_api_token_create_success' => 'API token succesfuldt oprettet',
-    'user_api_token_update_success' => 'API token succesfuldt opdateret',
     'user_api_token' => 'API Token',
     'user_api_token_id' => 'Token-ID',
     'user_api_token_id_desc' => 'Dette er en ikke-redigerbar systemgenereret identifikator for denne token, som skal sendes i API-anmodninger.',
@@ -244,7 +242,6 @@ return [
     'user_api_token_delete' => 'Slet Token',
     'user_api_token_delete_warning' => 'Dette vil helt slette API-token\'en med navnet \':tokenName\' fra systemet.',
     'user_api_token_delete_confirm' => 'Er du sikker på, at du vil slette denne API-token?',
-    'user_api_token_delete_success' => 'API-token slettet',
 
     // Webhooks
     'webhooks' => 'Webhooks',

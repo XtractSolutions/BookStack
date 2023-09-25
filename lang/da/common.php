@@ -6,6 +6,7 @@ return [
 
     // Buttons
     'cancel' => 'Annuller',
+    'close' => 'Close',
     'confirm' => 'Bekræft',
     'back' => 'Tilbage',
     'save' => 'Gem',
@@ -41,6 +42,7 @@ return [
     'remove' => 'Fjern',
     'add' => 'Tilføj',
     'configure' => 'Konfigurer',
+    'manage' => 'Manage',
     'fullscreen' => 'Fuld skærm',
     'favourite' => 'Foretrukken',
     'unfavourite' => 'Fjern som foretrukken',

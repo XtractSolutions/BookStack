@@ -2,7 +2,6 @@
 
 namespace Tests\Helpers;
 
-use BookStack\Auth\User;
 use BookStack\Entities\Models\Book;
 use BookStack\Entities\Models\Bookshelf;
 use BookStack\Entities\Models\Chapter;
@@ -12,6 +11,8 @@ use BookStack\Entities\Repos\BookRepo;
 use BookStack\Entities\Repos\BookshelfRepo;
 use BookStack\Entities\Repos\ChapterRepo;
 use BookStack\Entities\Repos\PageRepo;
+use BookStack\Entities\Tools\TrashCan;
+use BookStack\Users\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
@@ -195,6 +196,16 @@ class EntityProvider
         $pageRepo->updatePageDraft($draftPage, $input);
         $this->addToCache($draftPage);
         return $draftPage;
+    }
+
+    /**
+     * Fully destroy the given entity from the system, bypassing the recycle bin
+     * stage. Still runs through main app deletion logic.
+     */
+    public function destroy(Entity $entity)
+    {
+        $trash = app()->make(TrashCan::class);
+        $trash->destroyEntity($entity);
     }
 
     /**

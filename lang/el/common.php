@@ -6,6 +6,7 @@ return [
 
     // Buttons
     'cancel' => 'Ακύρωση',
+    'close' => 'Close',
     'confirm' => 'Οκ',
     'back' => 'Πίσω',
     'save' => 'Αποθήκευση',
@@ -41,6 +42,7 @@ return [
     'remove' => 'Αφαίρεση',
     'add' => 'Προσθήκη',
     'configure' => 'Διαμόρφωση',
+    'manage' => 'Manage',
     'fullscreen' => 'Πλήρης οθόνη',
     'favourite' => 'Αγαπημένα',
     'unfavourite' => 'Αφαίρεση από Αγαπημένα',

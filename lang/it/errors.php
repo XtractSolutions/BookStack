@@ -49,6 +49,7 @@ return [
     // Drawing & Images
     'image_upload_error' => 'C\'è stato un errore caricando l\'immagine',
     'image_upload_type_error' => 'Il tipo di immagine caricata non è valido',
+    'image_upload_replace_type' => 'Le sostituzioni di file immagine devono essere dello stesso tipo',
     'drawing_data_not_found' => 'Non è stato possibile caricare i dati del disegno. È possibile che il file del disegno non esista più o che non si abbia il permesso di accedervi.',
 
     // Attachments
@@ -57,6 +58,7 @@ return [
 
     // Pages
     'page_draft_autosave_fail' => 'Impossibile salvare la bozza. Controlla di essere connesso ad internet prima di salvare questa pagina',
+    'page_draft_delete_fail' => 'Impossibile eliminare la bozza di pagina e recuperare i contenuti salvati nella pagina corrente',
     'page_custom_home_deletion' => 'Impossibile eliminare una pagina quando è impostata come homepage',
 
     // Entities
@@ -109,4 +111,6 @@ return [
     // Settings & Maintenance
     'maintenance_test_email_failure' => 'Si è verificato un errore durante l\'invio di una e-mail di prova:',
 
+    // HTTP errors
+    'http_ssr_url_no_match' => 'L\'URL non corrisponde agli host SSR configurati',
 ];

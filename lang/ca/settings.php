@@ -9,7 +9,6 @@ return [
     // Common Messages
     'settings' => 'Configuració',
     'settings_save' => 'Desa la configuració',
-    'settings_save_success' => 'S\'ha desat la configuració',
     'system_version' => 'System Version',
     'categories' => 'Categories',
 
@@ -164,6 +163,7 @@ return [
     'role_manage_settings' => 'Gestiona la configuració de l\'aplicació',
     'role_export_content' => 'Export content',
     'role_editor_change' => 'Change page editor',
+    'role_notifications' => 'Receive & manage notifications',
     'role_asset' => 'Permisos de recursos',
     'roles_system_warning' => 'Tingueu en compte que l\'accés a qualsevol dels tres permisos de dalt pot permetre que un usuari alteri els seus propis permisos o els privilegis d\'altres usuaris del sistema. Assigneu rols amb aquests permisos només a usuaris de confiança.',
     'role_asset_desc' => 'Aquests permisos controlen l\'accés per defecte als recursos del sistema. Els permisos de llibres, capítols i pàgines tindran més importància que aquests permisos.',
@@ -232,8 +232,6 @@ return [
     'user_api_token_expiry' => 'Data de caducitat',
     'user_api_token_expiry_desc' => 'Definiu una data en què aquest testimoni caducarà. Després d\'aquesta data, les peticions fetes amb aquest testimoni deixaran de funcionar. Si deixeu aquest camp en blanc, es definirà una caducitat d\'aquí a 100 anys..',
     'user_api_token_create_secret_message' => 'Just després de crear aquest testimoni, es generaran i es mostraran un "Identificador del testimoni" i un "Secret del testimoni". El secret només es mostrarà una única vegada, assegureu-vos de copiar-lo a un lloc segur abans de continuar.',
-    'user_api_token_create_success' => 'Testimoni d\'API creat correctament',
-    'user_api_token_update_success' => 'Testimoni d\'API actualitzat correctament',
     'user_api_token' => 'Testimoni d\'API',
     'user_api_token_id' => 'Identificador del testimoni',
     'user_api_token_id_desc' => 'Aquest identificador és generat pel sistema per a aquest testimoni i no és editable, caldrà que el proporcioneu a les peticions a l\'API.',
@@ -244,7 +242,6 @@ return [
     'user_api_token_delete' => 'Suprimeix el testimoni',
     'user_api_token_delete_warning' => 'Se suprimirà completament del sistema aquest testimoni d\'API amb el nom \':tokenName\'.',
     'user_api_token_delete_confirm' => 'Segur que voleu suprimir aquest testimoni d\'API?',
-    'user_api_token_delete_success' => 'Testimoni d\'API suprimit correctament',
 
     // Webhooks
     'webhooks' => 'Webhooks',

@@ -49,6 +49,7 @@ return [
     // Drawing & Images
     'image_upload_error' => 'Une erreur est survenue pendant l\'envoi de l\'image',
     'image_upload_type_error' => 'Le format de l\'image envoyée n\'est pas valide',
+    'image_upload_replace_type' => 'Le fichier image doit être remplacé par une image du même type',
     'drawing_data_not_found' => 'Les données de dessin n\'ont pas pu être chargées. Le fichier de dessin peut ne plus exister ou vous n\'avez pas la permission d\'y accéder.',
 
     // Attachments
@@ -57,6 +58,7 @@ return [
 
     // Pages
     'page_draft_autosave_fail' => 'Le brouillon n\'a pas pu être enregistré. Vérifiez votre connexion internet',
+    'page_draft_delete_fail' => 'Impossible de supprimer le brouillon et de récupérer le contenu sauvegardé de la page actuelle',
     'page_custom_home_deletion' => 'Impossible de supprimer une page définie comme page d\'accueil',
 
     // Entities
@@ -109,4 +111,6 @@ return [
     // Settings & Maintenance
     'maintenance_test_email_failure' => 'Erreur émise lors de l\'envoi d\'un e-mail de test :',
 
+    // HTTP errors
+    'http_ssr_url_no_match' => 'L\'URL ne correspond pas aux hôtes SSR autorisés configurés',
 ];

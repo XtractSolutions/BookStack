@@ -9,7 +9,6 @@ return [
     // Common Messages
     'settings' => 'Innstillinger',
     'settings_save' => 'Lagre innstillinger',
-    'settings_save_success' => 'Innstillinger lagret',
     'system_version' => 'System versjon',
     'categories' => 'Kategorier',
 
@@ -164,6 +163,7 @@ return [
     'role_manage_settings' => 'Behandle applikasjonsinnstillinger',
     'role_export_content' => 'Eksporter innhold',
     'role_editor_change' => 'Endre sideredigering',
+    'role_notifications' => 'Motta og administrere varslinger',
     'role_asset' => 'Eiendomstillatelser',
     'roles_system_warning' => 'Vær oppmerksom på at tilgang til noen av de ovennevnte tre tillatelsene kan tillate en bruker å endre sine egne rettigheter eller rettighetene til andre i systemet. Bare tildel roller med disse tillatelsene til pålitelige brukere.',
     'role_asset_desc' => 'Disse tillatelsene kontrollerer standard tilgang til eiendelene i systemet. Tillatelser til bøker, kapitler og sider overstyrer disse tillatelsene.',
@@ -232,8 +232,6 @@ return [
     'user_api_token_expiry' => 'Utløpsdato',
     'user_api_token_expiry_desc' => 'Angi en dato da denne nøkkelen utløper. Etter denne datoen vil forespørsler som er gjort med denne nøkkelen ikke lenger fungere. Å la dette feltet stå tomt vil sette utløpsdato 100 år inn i fremtiden.',
     'user_api_token_create_secret_message' => 'Umiddelbart etter å ha opprettet denne nøkkelen vil en identifikator og hemmelighet bli generert og vist. Hemmeligheten vil bare vises en gang, så husk å kopiere verdien til et trygt sted før du fortsetter.',
-    'user_api_token_create_success' => 'API-nøkkel ble opprettet',
-    'user_api_token_update_success' => 'API-nøkkel ble oppdatert',
     'user_api_token' => 'API-nøkkel',
     'user_api_token_id' => 'Identifikator',
     'user_api_token_id_desc' => 'Dette er en ikke-redigerbar systemgenerert identifikator for denne nøkkelen som må oppgis i API-forespørsler.',
@@ -244,7 +242,6 @@ return [
     'user_api_token_delete' => 'Slett nøkkel',
     'user_api_token_delete_warning' => 'Dette vil slette API-nøkkelen \':tokenName\' fra systemet.',
     'user_api_token_delete_confirm' => 'Sikker på at du vil slette nøkkelen?',
-    'user_api_token_delete_success' => 'API-nøkkelen ble slettet',
 
     // Webhooks
     'webhooks' => 'Webhooks',

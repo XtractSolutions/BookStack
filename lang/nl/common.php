@@ -6,6 +6,7 @@ return [
 
     // Buttons
     'cancel' => 'Annuleer',
+    'close' => 'Sluit',
     'confirm' => 'Bevestig',
     'back' => 'Terug',
     'save' => 'Opslaan',
@@ -41,6 +42,7 @@ return [
     'remove' => 'Verwijder',
     'add' => 'Voeg toe',
     'configure' => 'Configureer',
+    'manage' => 'Beheer',
     'fullscreen' => 'Volledig scherm',
     'favourite' => 'Favoriet',
     'unfavourite' => 'Verwijderen als favoriet',

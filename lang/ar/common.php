@@ -6,6 +6,7 @@ return [
 
     // Buttons
     'cancel' => 'إلغاء',
+    'close' => 'Close',
     'confirm' => 'تأكيد',
     'back' => 'رجوع',
     'save' => 'حفظ',
@@ -41,6 +42,7 @@ return [
     'remove' => 'إزالة',
     'add' => 'إضافة',
     'configure' => 'Configure',
+    'manage' => 'Manage',
     'fullscreen' => 'شاشة كاملة',
     'favourite' => 'Favourite',
     'unfavourite' => 'Unfavourite',
