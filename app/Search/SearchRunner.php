@@ -50,7 +50,7 @@ class SearchRunner
      * The provided count is for each entity to search,
      * Total returned could be larger and not guaranteed.
      *
-     * @return array{total: int, count: int, has_more: bool, results: Entity[]}
+     * @return array{total: int, count: int, has_more: bool, results: Collection<Entity>}
      */
     public function searchEntities(SearchOptions $searchOpts, string $entityType = 'all', int $page = 1, int $count = 20): array
     {
@@ -162,7 +162,7 @@ class SearchRunner
         $entityQuery = $entityModelInstance->newQuery()->scopes('visible');
 
         if ($entityModelInstance instanceof Page) {
-            $entityQuery->select(array_merge($entityModelInstance::$listAttributes, ['restricted', 'owned_by']));
+            $entityQuery->select(array_merge($entityModelInstance::$listAttributes, ['owned_by']));
         } else {
             $entityQuery->select(['*']);
         }
@@ -173,6 +173,7 @@ class SearchRunner
         // Handle exact term matching
         foreach ($searchOpts->exacts as $inputTerm) {
             $entityQuery->where(function (EloquentBuilder $query) use ($inputTerm, $entityModelInstance) {
+                $inputTerm = str_replace('\\', '\\\\', $inputTerm);
                 $query->where('name', 'like', '%' . $inputTerm . '%')
                     ->orWhere($entityModelInstance->textField, 'like', '%' . $inputTerm . '%');
             });
@@ -218,6 +219,7 @@ class SearchRunner
         $subQuery->where('entity_type', '=', $entity->getMorphClass());
         $subQuery->where(function (Builder $query) use ($terms) {
             foreach ($terms as $inputTerm) {
+                $inputTerm = str_replace('\\', '\\\\', $inputTerm);
                 $query->orWhere('term', 'like', $inputTerm . '%');
             }
         });
@@ -354,6 +356,9 @@ class SearchRunner
                     $tagValue = (float) trim($connection->getPdo()->quote($tagValue), "'");
                     $query->whereRaw("value {$tagOperator} {$tagValue}");
                 } else {
+                    if ($tagOperator === 'like') {
+                        $tagValue = str_replace('\\', '\\\\', $tagValue);
+                    }
                     $query->where('value', $tagOperator, $tagValue);
                 }
             } else {
@@ -447,7 +452,7 @@ class SearchRunner
 
     protected function filterIsRestricted(EloquentBuilder $query, Entity $model, $input)
     {
-        $query->where('restricted', '=', true);
+        $query->whereHas('permissions');
     }
 
     protected function filterViewedByMe(EloquentBuilder $query, Entity $model, $input)

@@ -2,6 +2,7 @@
 
 namespace BookStack\Uploads;
 
+use BookStack\Auth\Permissions\JointPermission;
 use BookStack\Auth\Permissions\PermissionApplicator;
 use BookStack\Auth\User;
 use BookStack\Entities\Models\Entity;
@@ -9,7 +10,9 @@ use BookStack\Entities\Models\Page;
 use BookStack\Model;
 use BookStack\Traits\HasCreatorAndUpdater;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int    $id
@@ -27,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Attachment extends Model
 {
     use HasCreatorAndUpdater;
+    use HasFactory;
 
     protected $fillable = ['name', 'order'];
     protected $hidden = ['path', 'page'];
@@ -36,12 +40,10 @@ class Attachment extends Model
 
     /**
      * Get the downloadable file name for this upload.
-     *
-     * @return mixed|string
      */
-    public function getFileName()
+    public function getFileName(): string
     {
-        if (strpos($this->name, '.') !== false) {
+        if (str_contains($this->name, '.')) {
             return $this->name;
         }
 
@@ -56,12 +58,18 @@ class Attachment extends Model
         return $this->belongsTo(Page::class, 'uploaded_to');
     }
 
+    public function jointPermissions(): HasMany
+    {
+        return $this->hasMany(JointPermission::class, 'entity_id', 'uploaded_to')
+            ->where('joint_permissions.entity_type', '=', 'page');
+    }
+
     /**
      * Get the url of this file.
      */
     public function getUrl($openInline = false): string
     {
-        if ($this->external && strpos($this->path, 'http') !== 0) {
+        if ($this->external && !str_starts_with($this->path, 'http')) {
             return $this->path;
         }
 

@@ -3,7 +3,7 @@
     <div component="event-emit-select"
          option:event-emit-select:name="image"
          option:event-emit-select:data="{{ json_encode($image) }}"
-         class="image anim fadeIn text-primary"
+         class="image anim fadeIn text-link"
          style="animation-delay: {{ $index > 26 ? '160ms' : ($index * 25) . 'ms' }};">
         <img src="{{ $image->thumbs['gallery'] }}"
              alt="{{ $image->name }}"
@@ -19,5 +19,7 @@
 </div>
 @endforeach
 @if($hasMore)
-    <div class="load-more">{{ trans('components.image_load_more') }}</div>
+    <div class="load-more">
+        <button type="button" class="button small outline">{{ trans('components.image_load_more') }}</button>
+    </div>
 @endif

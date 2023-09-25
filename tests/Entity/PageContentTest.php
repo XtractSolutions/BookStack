@@ -5,18 +5,15 @@ namespace Tests\Entity;
 use BookStack\Entities\Models\Page;
 use BookStack\Entities\Tools\PageContent;
 use Tests\TestCase;
-use Tests\Uploads\UsesImages;
 
 class PageContentTest extends TestCase
 {
-    use UsesImages;
-
     protected $base64Jpeg = '/9j/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/yQALCAABAAEBAREA/8wABgAQEAX/2gAIAQEAAD8A0s8g/9k=';
 
     public function test_page_includes()
     {
-        $page = Page::query()->first();
-        $secondPage = Page::query()->where('id', '!=', $page->id)->first();
+        $page = $this->entities->page();
+        $secondPage = $this->entities->page();
 
         $secondPage->html = "<p id='section1'>Hello, This is a test</p><p id='section2'>This is a second block of content</p>";
         $secondPage->save();
@@ -44,8 +41,8 @@ class PageContentTest extends TestCase
 
     public function test_saving_page_with_includes()
     {
-        $page = Page::query()->first();
-        $secondPage = Page::query()->where('id', '!=', $page->id)->first();
+        $page = $this->entities->page();
+        $secondPage = $this->entities->page();
 
         $this->asEditor();
         $includeTag = '{{@' . $secondPage->id . '}}';
@@ -62,10 +59,8 @@ class PageContentTest extends TestCase
 
     public function test_page_includes_do_not_break_tables()
     {
-        /** @var Page $page */
-        $page = Page::query()->first();
-        /** @var Page $secondPage */
-        $secondPage = Page::query()->where('id', '!=', $page->id)->first();
+        $page = $this->entities->page();
+        $secondPage = $this->entities->page();
 
         $content = '<table id="table"><tbody><tr><td>test</td></tr></tbody></table>';
         $secondPage->html = $content;
@@ -80,10 +75,8 @@ class PageContentTest extends TestCase
 
     public function test_page_includes_do_not_break_code()
     {
-        /** @var Page $page */
-        $page = Page::query()->first();
-        /** @var Page $secondPage */
-        $secondPage = Page::query()->where('id', '!=', $page->id)->first();
+        $page = $this->entities->page();
+        $secondPage = $this->entities->page();
 
         $content = '<pre id="bkmrk-code"><code>var cat = null;</code></pre>';
         $secondPage->html = $content;
@@ -98,7 +91,7 @@ class PageContentTest extends TestCase
 
     public function test_page_includes_rendered_on_book_export()
     {
-        $page = Page::query()->first();
+        $page = $this->entities->page();
         $secondPage = Page::query()
             ->where('book_id', '!=', $page->book_id)
             ->first();
@@ -115,10 +108,22 @@ class PageContentTest extends TestCase
         $htmlContent->assertSee('my cat is awesome and scratchy');
     }
 
+    public function test_page_includes_can_be_nested_up_to_three_times()
+    {
+        $page = $this->entities->page();
+        $tag = "{{@{$page->id}#bkmrk-test}}";
+        $page->html = '<p id="bkmrk-test">Hello Barry ' . $tag . '</p>';
+        $page->save();
+
+        $pageResp = $this->asEditor()->get($page->getUrl());
+        $this->withHtml($pageResp)->assertElementContains('#bkmrk-test', 'Hello Barry Hello Barry Hello Barry Hello Barry ' . $tag);
+        $this->withHtml($pageResp)->assertElementNotContains('#bkmrk-test', 'Hello Barry Hello Barry Hello Barry Hello Barry Hello Barry ' . $tag);
+    }
+
     public function test_page_content_scripts_removed_by_default()
     {
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
         $script = 'abc123<script>console.log("hello-test")</script>abc123';
         $page->html = "escape {$script}";
         $page->save();
@@ -141,7 +146,7 @@ class PageContentTest extends TestCase
         ];
 
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         foreach ($checks as $check) {
             $page->html = $check;
@@ -177,7 +182,7 @@ class PageContentTest extends TestCase
         ];
 
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         foreach ($checks as $check) {
             $page->html = $check;
@@ -206,7 +211,7 @@ class PageContentTest extends TestCase
         ];
 
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         foreach ($checks as $check) {
             $page->html = $check;
@@ -230,7 +235,7 @@ class PageContentTest extends TestCase
         ];
 
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         foreach ($checks as $check) {
             $page->html = $check;
@@ -255,7 +260,7 @@ class PageContentTest extends TestCase
         ];
 
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         foreach ($checks as $check) {
             $page->html = $check;
@@ -273,7 +278,7 @@ class PageContentTest extends TestCase
     public function test_page_inline_on_attributes_removed_by_default()
     {
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
         $script = '<p onmouseenter="console.log(\'test\')">Hello</p>';
         $page->html = "escape {$script}";
         $page->save();
@@ -298,7 +303,7 @@ class PageContentTest extends TestCase
         ];
 
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         foreach ($checks as $check) {
             $page->html = $check;
@@ -313,8 +318,8 @@ class PageContentTest extends TestCase
     public function test_page_content_scripts_show_when_configured()
     {
         $this->asEditor();
-        $page = Page::query()->first();
-        config()->push('app.allow_content_scripts', 'true');
+        $page = $this->entities->page();
+        config()->set('app.allow_content_scripts', 'true');
 
         $script = 'abc123<script>console.log("hello-test")</script>abc123';
         $page->html = "no escape {$script}";
@@ -339,7 +344,7 @@ class PageContentTest extends TestCase
         ];
 
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         foreach ($checks as $check) {
             $page->html = $check;
@@ -358,8 +363,8 @@ class PageContentTest extends TestCase
     public function test_page_inline_on_attributes_show_if_configured()
     {
         $this->asEditor();
-        $page = Page::query()->first();
-        config()->push('app.allow_content_scripts', 'true');
+        $page = $this->entities->page();
+        config()->set('app.allow_content_scripts', 'true');
 
         $script = '<p onmouseenter="console.log(\'test\')">Hello</p>';
         $page->html = "escape {$script}";
@@ -390,7 +395,7 @@ class PageContentTest extends TestCase
     public function test_duplicate_ids_fixed_on_page_save()
     {
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         $content = '<ul id="bkmrk-test"><li>test a</li><li><ul id="bkmrk-test"><li>test b</li></ul></li></ul>';
         $pageSave = $this->put($page->getUrl(), [
@@ -407,7 +412,7 @@ class PageContentTest extends TestCase
     public function test_anchors_referencing_non_bkmrk_ids_rewritten_after_save()
     {
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         $content = '<h1 id="non-standard-id">test</h1><p><a href="#non-standard-id">link</a></p>';
         $this->put($page->getUrl(), [
@@ -485,9 +490,9 @@ class PageContentTest extends TestCase
 
     public function test_page_text_decodes_html_entities()
     {
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
-        $this->actingAs($this->getAdmin())
+        $this->actingAs($this->users->admin())
             ->put($page->getUrl(''), [
                 'name' => 'Testing',
                 'html' => '<p>&quot;Hello &amp; welcome&quot;</p>',
@@ -500,7 +505,7 @@ class PageContentTest extends TestCase
     public function test_page_markdown_table_rendering()
     {
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         $content = '| Syntax      | Description |
 | ----------- | ----------- |
@@ -521,7 +526,7 @@ class PageContentTest extends TestCase
     public function test_page_markdown_task_list_rendering()
     {
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         $content = '- [ ] Item a
 - [x] Item b';
@@ -542,7 +547,7 @@ class PageContentTest extends TestCase
     public function test_page_markdown_strikethrough_rendering()
     {
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         $content = '~~some crossed out text~~';
         $this->put($page->getUrl(), [
@@ -560,7 +565,7 @@ class PageContentTest extends TestCase
     public function test_page_markdown_single_html_comment_saving()
     {
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         $content = '<!-- Test Comment -->';
         $this->put($page->getUrl(), [
@@ -579,7 +584,7 @@ class PageContentTest extends TestCase
     public function test_base64_images_get_extracted_from_page_content()
     {
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         $this->put($page->getUrl(), [
             'name' => $page->name, 'summary' => '',
@@ -595,13 +600,13 @@ class PageContentTest extends TestCase
         $imageFile = public_path($imagePath);
         $this->assertEquals(base64_decode($this->base64Jpeg), file_get_contents($imageFile));
 
-        $this->deleteImage($imagePath);
+        $this->files->deleteAtRelativePath($imagePath);
     }
 
     public function test_base64_images_get_extracted_when_containing_whitespace()
     {
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         $base64PngWithWhitespace = "iVBORw0KGg\noAAAANSUhE\tUgAAAAEAAAA BCA   YAAAAfFcSJAAA\n\t ACklEQVR4nGMAAQAABQAB";
         $base64PngWithoutWhitespace = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQAB';
@@ -619,7 +624,7 @@ class PageContentTest extends TestCase
         $imageFile = public_path($imagePath);
         $this->assertEquals(base64_decode($base64PngWithoutWhitespace), file_get_contents($imageFile));
 
-        $this->deleteImage($imagePath);
+        $this->files->deleteAtRelativePath($imagePath);
     }
 
     public function test_base64_images_within_html_blanked_if_not_supported_extension_for_extract()
@@ -632,7 +637,7 @@ class PageContentTest extends TestCase
 
         foreach ($extensions as $extension) {
             $this->asEditor();
-            $page = Page::query()->first();
+            $page = $this->entities->page();
 
             $this->put($page->getUrl(), [
                 'name' => $page->name, 'summary' => '',
@@ -647,7 +652,7 @@ class PageContentTest extends TestCase
     public function test_base64_images_get_extracted_from_markdown_page_content()
     {
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         $this->put($page->getUrl(), [
             'name'     => $page->name, 'summary' => '',
@@ -663,7 +668,7 @@ class PageContentTest extends TestCase
         $imageFile = public_path($imagePath);
         $this->assertEquals(base64_decode($this->base64Jpeg), file_get_contents($imageFile));
 
-        $this->deleteImage($imagePath);
+        $this->files->deleteAtRelativePath($imagePath);
     }
 
     public function test_markdown_base64_extract_not_limited_by_pcre_limits()
@@ -672,7 +677,7 @@ class PageContentTest extends TestCase
         $pcreRecursionLimit = ini_get('pcre.recursion_limit');
 
         $this->asEditor();
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         ini_set('pcre.backtrack_limit', '500');
         ini_set('pcre.recursion_limit', '500');
@@ -694,14 +699,14 @@ class PageContentTest extends TestCase
         $imageFile = public_path($imagePath);
         $this->assertEquals($content, file_get_contents($imageFile));
 
-        $this->deleteImage($imagePath);
+        $this->files->deleteAtRelativePath($imagePath);
         ini_set('pcre.backtrack_limit', $pcreBacktrackLimit);
         ini_set('pcre.recursion_limit', $pcreRecursionLimit);
     }
 
     public function test_base64_images_within_markdown_blanked_if_not_supported_extension_for_extract()
     {
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         $this->asEditor()->put($page->getUrl(), [
             'name'     => $page->name, 'summary' => '',
@@ -713,7 +718,7 @@ class PageContentTest extends TestCase
 
     public function test_nested_headers_gets_assigned_an_id()
     {
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         $content = '<table><tbody><tr><td><h5>Simple Test</h5></td></tr></tbody></table>';
         $this->asEditor()->put($page->getUrl(), [
@@ -729,8 +734,7 @@ class PageContentTest extends TestCase
 
     public function test_non_breaking_spaces_are_preserved()
     {
-        /** @var Page $page */
-        $page = Page::query()->first();
+        $page = $this->entities->page();
 
         $content = '<p>&nbsp;</p>';
         $this->asEditor()->put($page->getUrl(), [
@@ -739,5 +743,24 @@ class PageContentTest extends TestCase
         ]);
 
         $this->assertStringContainsString('<p id="bkmrk-%C2%A0">&nbsp;</p>', $page->refresh()->html);
+    }
+
+    public function test_page_save_with_many_headers_and_links_is_reasonable()
+    {
+        $page = $this->entities->page();
+
+        $content = '';
+        for ($i = 0; $i < 500; $i++) {
+            $content .= "<table><tbody><tr><td><h5 id='header-{$i}'>Simple Test</h5><a href='#header-{$i}'></a></td></tr></tbody></table>";
+        }
+
+        $time = time();
+        $this->asEditor()->put($page->getUrl(), [
+            'name'    => $page->name,
+            'html'    => $content,
+        ])->assertRedirect();
+
+        $timeElapsed = time() - $time;
+        $this->assertLessThan(3, $timeElapsed);
     }
 }

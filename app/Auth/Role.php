@@ -2,6 +2,7 @@
 
 namespace BookStack\Auth;
 
+use BookStack\Auth\Permissions\EntityPermission;
 use BookStack\Auth\Permissions\JointPermission;
 use BookStack\Auth\Permissions\RolePermission;
 use BookStack\Interfaces\Loggable;
@@ -26,9 +27,13 @@ class Role extends Model implements Loggable
 {
     use HasFactory;
 
-    protected $fillable = ['display_name', 'description', 'external_auth_id'];
+    protected $fillable = ['display_name', 'description', 'external_auth_id', 'mfa_enforced'];
 
     protected $hidden = ['pivot'];
+
+    protected $casts = [
+        'mfa_enforced' => 'boolean',
+    ];
 
     /**
      * The roles that belong to the role.
@@ -52,6 +57,14 @@ class Role extends Model implements Loggable
     public function permissions(): BelongsToMany
     {
         return $this->belongsToMany(RolePermission::class, 'permission_role', 'role_id', 'permission_id');
+    }
+
+    /**
+     * Get the entity permissions assigned to this role.
+     */
+    public function entityPermissions(): HasMany
+    {
+        return $this->hasMany(EntityPermission::class);
     }
 
     /**
@@ -98,26 +111,13 @@ class Role extends Model implements Loggable
      */
     public static function getSystemRole(string $systemName): ?self
     {
-        return static::query()->where('system_name', '=', $systemName)->first();
-    }
+        static $cache = [];
 
-    /**
-     * Get all visible roles.
-     */
-    public static function visible(): Collection
-    {
-        return static::query()->where('hidden', '=', false)->orderBy('name')->get();
-    }
+        if (!isset($cache[$systemName])) {
+            $cache[$systemName] = static::query()->where('system_name', '=', $systemName)->first();
+        }
 
-    /**
-     * Get the roles that can be restricted.
-     */
-    public static function restrictable(): Collection
-    {
-        return static::query()
-            ->where('system_name', '!=', 'admin')
-            ->orderBy('display_name', 'asc')
-            ->get();
+        return $cache[$systemName];
     }
 
     /**
