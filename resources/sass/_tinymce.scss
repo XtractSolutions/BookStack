@@ -21,6 +21,7 @@
   padding-block-end: 1rem;
   outline: 0;
   display: block;
+  max-width: 870px;
 }
 
 .wysiwyg-input.mce-content-body {
@@ -43,11 +44,6 @@
 }
 .page-content.mce-content-body code-block {
   display: block;
-}
-
-// In editor line height override
-.page-content.mce-content-body p {
-  line-height: 1.6;
 }
 
 // Pad out bottom of editor
